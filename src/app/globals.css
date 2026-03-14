@@ -1,0 +1,213 @@
+@import "tailwindcss";
+
+@theme {
+  /* Fonts */
+  --font-orbitron: var(--font-orbitron), sans-serif;
+  --font-rajdhani: var(--font-rajdhani), sans-serif;
+  --font-mono: var(--font-mono), monospace;
+
+  /* Colors - Cream Backgrounds (ChainGPT Labs Theme) */
+  --color-void-deepest: #F5F5F0;
+  --color-void-deep: #EBECEF;
+  --color-void-mid: #E0E2E7;
+  --color-void-light: #D5D8DE;
+  --color-void-lighter: #C9CDD4;
+
+  /* Colors - Cyan (Primary/Energy/Connectivity) - Darker for Light Theme */
+  --color-cyan-300: #00b8c2;
+  --color-cyan-400: #0099a8;
+  --color-cyan-500: #007a8c;
+  --color-cyan-700: #005963;
+  --color-cyan-glow: rgba(0, 122, 140, 0.25);
+  --color-cyan-ghost: rgba(0, 122, 140, 0.08);
+
+  /* Colors - Purple (Governance/AI/Intelligence) - Darker for Light Theme */
+  --color-purple-300: #8b4aff;
+  --color-purple-500: #5c14cc;
+  --color-purple-700: #420b9e;
+  --color-purple-glow: rgba(92, 20, 204, 0.25);
+
+  /* Colors - Gold (Treasury/Value/Achievement) - Darker for Light Theme */
+  --color-gold-300: #e6b800;
+  --color-gold-500: #b38f00;
+  --color-gold-700: #806600;
+  --color-gold-glow: rgba(179, 143, 0, 0.25);
+
+  /* Colors - Magenta (Danger/Threats/Alerts) - Darker for Light Theme */
+  --color-magenta-300: #eb4073;
+  --color-magenta-500: #bd154d;
+  --color-magenta-glow: rgba(189, 21, 77, 0.25);
+
+  /* Colors - Green (Success/Growth/Simulator) - Darker for Light Theme */
+  --color-green-300: #00cc6a;
+  --color-green-500: #008a47;
+  --color-green-glow: rgba(0, 138, 71, 0.25);
+
+  /* Colors - Text (Dark for Cream Theme) */
+  --color-text-primary: #050505;
+  --color-text-secondary: #2A2A2A;
+  --color-text-tertiary: #4A4A4A;
+  --color-text-disabled: #6E6E6E;
+
+  /* Timing */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+  --duration-fast: 200ms;
+  --duration-normal: 350ms;
+  --duration-slow: 600ms;
+  --duration-cinematic: 1200ms;
+
+  /* Keyframes */
+  --animate-pulse-ring: pulse-ring 2s infinite;
+  @keyframes pulse-ring {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 0 8px rgba(0, 255, 136, 0);
+    }
+  }
+}
+
+:root {
+  /* GLASS TOKENS FOR DIRECT CSS REUSE */
+  --glass-bg: rgba(245, 245, 240, 0.72);
+  --glass-bg-hover: rgba(235, 236, 239, 0.85);
+  --glass-border: rgba(0, 0, 0, 0.12);
+  --glass-border-hover: rgba(0, 0, 0, 0.28);
+  --glass-blur: 16px;
+  --cyan-500: #007a8c;
+  --cyan-glow: rgba(0, 122, 140, 0.25);
+  --green-500: #008a47;
+}
+
+@layer base {
+  body {
+    @apply bg-void-deepest text-text-primary antialiased;
+    font-family: var(--font-rajdhani);
+  }
+}
+
+@layer components {
+  /* HOLO PANEL — glass with corner brackets (ChainGPT pattern) */
+  .holo-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: 6px;
+    position: relative;
+    transition: all 200ms;
+  }
+  .holo-panel::before {
+    top: -1px;
+    left: -1px;
+    border-width: 2px 0 0 2px;
+  }
+  .holo-panel::after {
+    bottom: -1px;
+    right: -1px;
+    border-width: 0 2px 2px 0;
+  }
+  .holo-panel::before,
+  .holo-panel::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-color: var(--cyan-500);
+    border-style: solid;
+  }
+  .holo-panel:hover {
+    background: var(--glass-bg-hover);
+    border-color: var(--glass-border-hover);
+  }
+
+  /* GLOW BUTTON — primary and ghost variants */
+  .glow-btn {
+    border: 1px solid var(--cyan-500);
+    color: var(--cyan-500);
+    padding: 12px 28px;
+    font-family: var(--font-orbitron);
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 200ms;
+    box-shadow: 0 0 20px var(--cyan-glow);
+  }
+  .glow-btn:hover {
+    background: var(--cyan-500);
+    color: #000;
+    box-shadow: 0 0 40px var(--cyan-glow), 0 0 80px var(--cyan-glow);
+  }
+  .glow-btn.primary {
+    background: var(--cyan-500);
+    color: #000;
+  }
+
+  /* PULSE DOT — live status indicator */
+  .pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green-500);
+    animation: pulse-ring 2s infinite;
+  }
+
+  /* SCAN LINE OVERLAY — apply to app panels for sci-fi effect */
+  .scanlines::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.03) 0px,
+      rgba(0, 0, 0, 0.03) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+  }
+
+  /* TYPOGRAPHY COMPONENTS */
+  .text-hero {
+    font-family: var(--font-orbitron);
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+  .text-xl {
+    font-family: var(--font-orbitron);
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .text-lg {
+    font-family: var(--font-orbitron);
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .text-label {
+    font-family: var(--font-rajdhani);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .text-data {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    letter-spacing: 0.03em;
+  }
+  .text-data-lg {
+    font-family: var(--font-mono);
+    font-size: 1.75rem;
+    font-weight: 500;
+  }
+}

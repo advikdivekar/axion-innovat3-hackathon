@@ -1,44 +1,42 @@
-// src/app/layout.tsx
-import type { Metadata } from 'next';
-import './globals.css';
+import type { Metadata } from "next";
+import { Orbitron, Rajdhani, JetBrains_Mono } from "next/font/google";
+import "./globals.css";
 
-// These imports will error until Dev A and Dev B build them!
-// import { Providers } from './providers';
-// import { UniverseCanvas } from '@/components/canvas/UniverseCanvas';
-// import { AppShell } from '@/components/ui/AppShell';
+const fontOrbitron = Orbitron({
+  subsets: ["latin"],
+  variable: "--font-orbitron",
+  weight: ["400", "700", "900"],
+});
+
+const fontRajdhani = Rajdhani({
+  subsets: ["latin"],
+  variable: "--font-rajdhani",
+  weight: ["400", "600"],
+});
+
+const fontJetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  weight: ["400", "700"],
+});
 
 export const metadata: Metadata = {
-    title: 'DAO Cosmos OS',
-    description: 'A living universe interface for decentralized autonomous organizations.',
+  title: "DAO Cosmos OS",
+  description: "Mission Control for Decentralized Organizations",
 };
 
 export default function RootLayout({
-    children,
+  children,
 }: {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-    return (
-        <html lang="en">
-            <body className="antialiased overflow-hidden bg-cosmos-void text-cosmos-text-primary">
-
-                {/* DEV B: Uncomment Providers once src/app/providers.tsx is built */}
-                {/* <Providers> */}
-
-                {/* DEV A: Uncomment once 3D canvas is built. This sits in the background. */}
-                {/* <div className="fixed inset-0 z-0">
-                <UniverseCanvas />
-              </div> */}
-
-                {/* DEV A: Uncomment once UI shell is built. This holds the 2D overlays. */}
-                {/* <AppShell> */}
-                <main className="relative z-10 w-full h-full">
-                    {children}
-                </main>
-                {/* </AppShell> */}
-
-                {/* </Providers> */}
-
-            </body>
-        </html>
-    );
+  return (
+    <html lang="en" className="scroll-smooth">
+      <body
+        className={`${fontOrbitron.variable} ${fontRajdhani.variable} ${fontJetbrainsMono.variable} bg-void-deepest text-text-primary antialiased min-h-screen flex flex-col overflow-x-hidden`}
+      >
+        <main className="flex-1">{children}</main>
+      </body>
+    </html>
+  );
 }
