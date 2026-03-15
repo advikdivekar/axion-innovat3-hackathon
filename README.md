@@ -16,7 +16,6 @@ Axion is a real-time 3D intelligence platform for decentralized autonomous organ
 
 **Live Demo:** [https://aexion.vercel.app](https://aexion.vercel.app)
 
-![Axion Universe](./docs/screenshot.png)
 
 ---
 
