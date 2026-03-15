@@ -4,20 +4,11 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { fadeUp, stagger, viewport } from '@/lib/animations';
 import { useCountUp } from '@/hooks/useCountUp';
+import { useApiData } from '@/hooks/useApiData';
+import { getThreats } from '@/lib/api';
+import type { Threat } from '@/lib/types';
 
 const MOD = '#ff5c16';
-
-interface Threat {
-  id: string;
-  type: string;
-  severity: string;
-  riskScore: number;
-  title: string;
-  description: string;
-  status: string;
-  detectedAt: string;
-  detectedBy: string;
-}
 
 const SEVERITY_COLOR: Record<string, string> = {
   critical: '#ff5c16',
@@ -25,14 +16,6 @@ const SEVERITY_COLOR: Record<string, string> = {
   medium: '#baf24a',
   low: '#89b0ff',
 };
-
-const MOCK_THREATS: Threat[] = [
-  { id: '1', type: 'flash_loan_attack', severity: 'critical', riskScore: 92, title: 'Flash Loan Exploit Detected', description: 'Suspicious flash loan pattern targeting the liquidity pools. Multiple transactions with abnormal slippage detected within a 3-block window.', status: 'active', detectedAt: new Date(Date.now() - 1800000).toISOString(), detectedBy: 'ARGUS-ML' },
-  { id: '2', type: 'governance_manipulation', severity: 'high', riskScore: 74, title: 'Governance Vote Manipulation', description: 'Coordinated voting pattern detected from 12 addresses that received token transfers from the same source within 24h of proposal creation.', status: 'active', detectedAt: new Date(Date.now() - 7200000).toISOString(), detectedBy: 'ARGUS-ON-CHAIN' },
-  { id: '3', type: 'reentrancy_attempt', severity: 'high', riskScore: 68, title: 'Reentrancy Pattern Identified', description: 'Contract interaction sequence matches known reentrancy attack patterns. The contract at 0x7f3... is making recursive calls.', status: 'investigating', detectedAt: new Date(Date.now() - 14400000).toISOString(), detectedBy: 'ARGUS-ML' },
-  { id: '4', type: 'price_oracle_manipulation', severity: 'medium', riskScore: 45, title: 'Oracle Price Deviation', description: 'Price feed for ETH/USDC showing 3.2% deviation from market price across two oracle providers.', status: 'monitoring', detectedAt: new Date(Date.now() - 28800000).toISOString(), detectedBy: 'ARGUS-ORACLE' },
-  { id: '5', type: 'unusual_activity', severity: 'low', riskScore: 22, title: 'Unusual Transfer Volume', description: 'Token transfer volume 40% above 7-day average. Pattern consistent with airdrop farming rather than an active threat.', status: 'resolved', detectedAt: new Date(Date.now() - 86400000).toISOString(), detectedBy: 'ARGUS-STATS' },
-];
 
 function timeAgo(ts: string) {
   const diff = Date.now() - new Date(ts).getTime();
@@ -138,25 +121,15 @@ function ThreatDetail({ threat }: { threat: Threat }) {
 }
 
 export default function SecurityPage() {
-  const [threats, setThreats] = useState<Threat[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data, loading } = useApiData(getThreats);
+  const threats: Threat[] = data ?? [];
   const [selected, setSelected] = useState<Threat | null>(null);
 
   useEffect(() => {
-    fetch('/api/security')
-      .then(r => r.json())
-      .then((data: Threat[]) => {
-        const list = Array.isArray(data) && data.length > 0 ? data : MOCK_THREATS;
-        setThreats(list);
-        setSelected(list[0] ?? null);
-        setLoading(false);
-      })
-      .catch(() => {
-        setThreats(MOCK_THREATS);
-        setSelected(MOCK_THREATS[0]);
-        setLoading(false);
-      });
-  }, []);
+    if (threats.length > 0 && selected === null) {
+      setSelected(threats[0]);
+    }
+  }, [threats, selected]);
 
   const activeCount = threats.filter(t => t.status === 'active').length;
   const criticalCount = threats.filter(t => t.severity === 'critical').length;

@@ -1,33 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { fadeUp, stagger, viewport } from '@/lib/animations';
 import { useCountUp } from '@/hooks/useCountUp';
+import { useApiData } from '@/hooks/useApiData';
+import { getContributors } from '@/lib/api';
+import type { Contributor } from '@/lib/types';
 
 const MOD = '#89b0ff';
-
-interface Contributor {
-  address: string;
-  ensName?: string;
-  votingPower: number;
-  xp: number;
-  level: number;
-  contributorClass: string;
-  participationRate: number;
-  activityScore: number;
-  proposalsCreated: number;
-  votesCast: number;
-  lastActive: string;
-}
-
-const MOCK_CONTRIBUTORS: Contributor[] = [
-  { address: '0x1111111111111111', ensName: 'atlas.eth', votingPower: 980000, xp: 42000, level: 12, contributorClass: 'architect', participationRate: 0.94, activityScore: 97, proposalsCreated: 8, votesCast: 142, lastActive: new Date(Date.now() - 3600000).toISOString() },
-  { address: '0x2222222222222222', ensName: 'hermes.eth', votingPower: 620000, xp: 36500, level: 10, contributorClass: 'diplomat', participationRate: 0.87, activityScore: 91, proposalsCreated: 5, votesCast: 118, lastActive: new Date(Date.now() - 86400000).toISOString() },
-  { address: '0x3333333333333333', ensName: 'oracle.eth', votingPower: 540000, xp: 28800, level: 9, contributorClass: 'sentinel', participationRate: 0.78, activityScore: 83, proposalsCreated: 3, votesCast: 97, lastActive: new Date(Date.now() - 172800000).toISOString() },
-  { address: '0x4444444444444444', ensName: 'nexus.eth', votingPower: 340000, xp: 19200, level: 7, contributorClass: 'merchant', participationRate: 0.65, activityScore: 71, proposalsCreated: 2, votesCast: 64, lastActive: new Date(Date.now() - 432000000).toISOString() },
-  { address: '0x5555555555555555', votingPower: 210000, xp: 12400, level: 5, contributorClass: 'explorer', participationRate: 0.52, activityScore: 58, proposalsCreated: 1, votesCast: 41, lastActive: new Date(Date.now() - 604800000).toISOString() },
-];
 
 const CLASS_COLOR: Record<string, string> = {
   architect: '#d075ff',
@@ -62,23 +43,9 @@ function KpiCard({ label, end, prefix, suffix, color }: { label: string; end: nu
 }
 
 export default function ContributorsPage() {
-  const [contributors, setContributors] = useState<Contributor[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data, loading } = useApiData(getContributors);
+  const contributors: Contributor[] = data ?? [];
   const [sortBy, setSortBy] = useState<'xp' | 'proposals'>('xp');
-
-  useEffect(() => {
-    fetch('/api/blockchain/contributors')
-      .then(r => r.json())
-      .then(data => {
-        const list = Array.isArray(data) && data.length > 0 ? data : MOCK_CONTRIBUTORS;
-        setContributors(list);
-        setLoading(false);
-      })
-      .catch(() => {
-        setContributors(MOCK_CONTRIBUTORS);
-        setLoading(false);
-      });
-  }, []);
 
   const sorted = [...contributors].sort((a, b) => {
     if (sortBy === 'xp') return b.xp - a.xp;

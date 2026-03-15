@@ -3,31 +3,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { fadeUp, stagger, viewport } from '@/lib/animations';
+import { runSimulation } from '@/lib/api';
+import type { SimulationResult, SimulationTimeline } from '@/lib/types';
 
 const MOD = '#baf24a';
-
-interface TimelineMetrics {
-  treasuryValue: number;
-  treasuryChange: number;
-  contributorCount: number;
-  contributorChange: number;
-  governanceHealth: number;
-  survivalMonths: number;
-}
-
-interface Timeline {
-  id: string;
-  name: string;
-  probability: number;
-  sentiment: string;
-  narrative: string;
-  metrics: TimelineMetrics;
-  events?: string[];
-}
-
-interface SimResult {
-  timelines: Timeline[];
-}
 
 const SCENARIOS = [
   {
@@ -102,7 +81,7 @@ function SVGTimeline({ events, color }: SVGTimelineProps) {
     const lineEl = lineRef.current;
     if (!lineEl) return;
 
-    const totalLen = lineEl.getTotalLength?.() ?? 200;
+    const totalLen = (lineEl as SVGLineElement & { getTotalLength?: () => number }).getTotalLength?.() ?? 200;
     lineEl.style.strokeDasharray = String(totalLen);
     lineEl.style.strokeDashoffset = String(totalLen);
 
@@ -149,7 +128,7 @@ function SVGTimeline({ events, color }: SVGTimelineProps) {
   );
 }
 
-function TimelineCard({ timeline, events }: { timeline: Timeline; events: string[] }) {
+function TimelineCard({ timeline, events }: { timeline: SimulationTimeline; events: string[] }) {
   const color = SENTIMENT_COLOR[timeline.sentiment] ?? '#888';
   return (
     <div
@@ -200,8 +179,8 @@ function TimelineCard({ timeline, events }: { timeline: Timeline; events: string
       {/* Metrics */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', paddingTop: '0.8rem', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
         {[
-          { label: 'Treasury', value: fmtUSD(timeline.metrics.treasuryValue), delta: timeline.metrics.treasuryChange },
-          { label: 'Contributors', value: String(timeline.metrics.contributorCount), delta: timeline.metrics.contributorChange },
+          { label: 'Treasury', value: fmtUSD(timeline.metrics.treasuryValue), delta: timeline.metrics.treasuryChange as number | null },
+          { label: 'Contributors', value: String(timeline.metrics.contributorCount), delta: timeline.metrics.contributorChange as number | null },
           { label: 'Gov Health', value: `${timeline.metrics.governanceHealth}%`, delta: null as number | null },
           { label: 'Runway', value: `${timeline.metrics.survivalMonths}mo`, delta: null as number | null },
         ].map(row => (
@@ -224,32 +203,15 @@ function TimelineCard({ timeline, events }: { timeline: Timeline; events: string
 
 export default function SimulatorPage() {
   const [scenario, setScenario] = useState<ScenarioId>('market_crash');
-  const [result, setResult] = useState<SimResult | null>(null);
+  const [result, setResult] = useState<SimulationResult | null>(null);
   const [loading, setLoading] = useState(false);
 
   const runSim = async () => {
     setLoading(true);
     setResult(null);
-    try {
-      const res = await fetch('/api/simulate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ scenario, parameters: { scenario } }),
-      });
-      const data: SimResult = await res.json();
-      setResult(data);
-    } catch {
-      // Fallback mock result
-      setResult({
-        timelines: [
-          { id: 'opt', name: 'Optimistic', probability: 0.28, sentiment: 'optimistic', narrative: 'Strong community response and rapid protocol adaptation leads to minimal long-term impact. Treasury preserves 85% of value.', metrics: { treasuryValue: 41000000, treasuryChange: -14, contributorCount: 280, contributorChange: 5, governanceHealth: 91, survivalMonths: 38 } },
-          { id: 'base', name: 'Base Case', probability: 0.52, sentiment: 'neutral', narrative: 'Protocol weathers the scenario with moderate disruption. Recovery takes 4-6 months with community governance actions.', metrics: { treasuryValue: 29000000, treasuryChange: -40, contributorCount: 210, contributorChange: -12, governanceHealth: 72, survivalMonths: 24 } },
-          { id: 'pess', name: 'Pessimistic', probability: 0.20, sentiment: 'pessimistic', narrative: 'Cascading failures overwhelm defensive mechanisms. Significant treasury drawdown and contributor exodus occurs.', metrics: { treasuryValue: 12000000, treasuryChange: -75, contributorCount: 98, contributorChange: -58, governanceHealth: 34, survivalMonths: 9 } },
-        ],
-      });
-    } finally {
-      setLoading(false);
-    }
+    const data = await runSimulation(scenario, {});
+    setResult(data);
+    setLoading(false);
   };
 
   const scenarioEvents = MOCK_EVENTS[scenario] ?? [[], [], []];

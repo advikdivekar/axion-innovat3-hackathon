@@ -1,67 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { fadeUp, stagger, viewport } from '@/lib/animations';
 import { useCountUp } from '@/hooks/useCountUp';
+import { useApiData } from '@/hooks/useApiData';
+import { getTreasury } from '@/lib/api';
+import { MOCK_TREASURY } from '@/lib/mockData';
+import type { TreasuryState } from '@/lib/types';
 
 const MOD = '#f59e0b';
-
-interface Token {
-  symbol: string;
-  name: string;
-  balance: number;
-  valueUSD: number;
-  percentage: number;
-  priceUSD: number;
-  priceChange24h: number;
-}
-
-interface Transfer {
-  id: string;
-  from: string;
-  to: string;
-  tokenSymbol: string;
-  amount: number;
-  valueUSD: number;
-  type: string;
-  timestamp: string;
-  anomaly?: boolean;
-}
-
-interface Treasury {
-  totalValueUSD: number;
-  tokens: Token[];
-  inflow24h: number;
-  outflow24h: number;
-  netFlow24h: number;
-  runwayDays: number;
-  healthScore: number;
-  recentTransfers: Transfer[];
-}
-
-const MOCK_TREASURY: Treasury = {
-  totalValueUSD: 48_200_000,
-  inflow24h: 1_200_000,
-  outflow24h: 340_000,
-  netFlow24h: 860_000,
-  runwayDays: 548,
-  healthScore: 78,
-  tokens: [
-    { symbol: 'ETH', name: 'Ethereum', balance: 12400, valueUSD: 24_800_000, percentage: 51.5, priceUSD: 2000, priceChange24h: 2.3 },
-    { symbol: 'USDC', name: 'USD Coin', balance: 14_200_000, valueUSD: 14_200_000, percentage: 29.5, priceUSD: 1, priceChange24h: 0.0 },
-    { symbol: 'AXN', name: 'Axion', balance: 8_000_000, valueUSD: 6_400_000, percentage: 13.3, priceUSD: 0.8, priceChange24h: -1.2 },
-    { symbol: 'WBTC', name: 'Wrapped Bitcoin', balance: 35, valueUSD: 2_800_000, percentage: 5.8, priceUSD: 80000, priceChange24h: 1.8 },
-  ],
-  recentTransfers: [
-    { id: 't1', from: '0xabc', to: 'Treasury', tokenSymbol: 'USDC', amount: 500000, valueUSD: 500000, type: 'inflow', timestamp: new Date(Date.now() - 3600000).toISOString() },
-    { id: 't2', from: 'Treasury', to: '0xdef', tokenSymbol: 'ETH', amount: 50, valueUSD: 100000, type: 'outflow', timestamp: new Date(Date.now() - 7200000).toISOString() },
-    { id: 't3', from: '0x999', to: 'Treasury', tokenSymbol: 'AXN', amount: 200000, valueUSD: 160000, type: 'inflow', timestamp: new Date(Date.now() - 14400000).toISOString(), anomaly: true },
-    { id: 't4', from: 'Treasury', to: '0x777', tokenSymbol: 'USDC', amount: 80000, valueUSD: 80000, type: 'outflow', timestamp: new Date(Date.now() - 28800000).toISOString() },
-    { id: 't5', from: '0xeee', to: 'Treasury', tokenSymbol: 'WBTC', amount: 1, valueUSD: 80000, type: 'inflow', timestamp: new Date(Date.now() - 86400000).toISOString() },
-  ],
-};
-
 const TOKEN_COLORS = [MOD, '#00d4ff', '#d075ff', '#22c55e', '#89b0ff'];
 
 function fmtUSD(n: number) {
@@ -91,23 +38,9 @@ function KpiCard({ label, end, prefix, suffix, color, decimals }: { label: strin
 }
 
 export default function TreasuryPage() {
-  const [data, setData] = useState<Treasury | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { data, loading } = useApiData(getTreasury);
+  const d: TreasuryState = data ?? MOCK_TREASURY;
 
-  useEffect(() => {
-    fetch('/api/blockchain/treasury')
-      .then(r => r.json())
-      .then(d => {
-        setData(d && d.totalValueUSD ? d : MOCK_TREASURY);
-        setLoading(false);
-      })
-      .catch(() => {
-        setData(MOCK_TREASURY);
-        setLoading(false);
-      });
-  }, []);
-
-  const d = data ?? MOCK_TREASURY;
   const runwayYears = Math.floor(d.runwayDays / 365);
   const runwayMonths = Math.floor((d.runwayDays % 365) / 30);
   const circumference = 2 * Math.PI * 30;
@@ -245,12 +178,9 @@ export default function TreasuryPage() {
                   <div key={t.symbol} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.8rem 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                     <div style={{ width: '0.8rem', height: '0.8rem', borderRadius: '0.2rem', background: TOKEN_COLORS[i] ?? '#888', flexShrink: 0 }} />
                     <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '1.2rem', color: 'var(--text-primary)', width: '5.2rem' }}>{t.symbol}</span>
-
-                    {/* Horizontal bar */}
                     <div style={{ flex: 1, height: '0.5rem', borderRadius: '0.3rem', background: 'rgba(255,255,255,0.07)', overflow: 'hidden' }}>
                       <div style={{ width: `${t.percentage}%`, height: '100%', background: TOKEN_COLORS[i] ?? '#888', transition: 'width 0.6s ease' }} />
                     </div>
-
                     <span style={{ fontFamily: 'Inter, sans-serif', fontSize: '1.2rem', color: 'rgba(255,255,255,0.5)', width: '4rem', textAlign: 'right' }}>
                       {t.percentage.toFixed(1)}%
                     </span>
@@ -286,7 +216,7 @@ export default function TreasuryPage() {
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
                 {d.recentTransfers.slice(0, 5).map(tx => {
-                  const isIn = tx.type === 'inflow' || tx.to.toLowerCase().includes('treasury');
+                  const isIn = tx.to.toLowerCase().includes('treasury') || tx.to.toLowerCase().includes('external') === false;
                   return (
                     <div
                       key={tx.id}
@@ -297,7 +227,7 @@ export default function TreasuryPage() {
                         display: 'flex',
                         alignItems: 'center',
                         gap: '1.2rem',
-                        borderLeft: tx.anomaly ? '3px solid #ef4444' : '3px solid transparent',
+                        borderLeft: tx.isAnomaly ? '3px solid #ef4444' : '3px solid transparent',
                       }}
                     >
                       <div style={{ width: '2.8rem', height: '2.8rem', borderRadius: '0.6rem', background: isIn ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -308,7 +238,7 @@ export default function TreasuryPage() {
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '1.3rem', color: 'var(--text-primary)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                           {tx.tokenSymbol} transfer
-                          {tx.anomaly && (
+                          {tx.isAnomaly && (
                             <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.9rem', padding: '0.1rem 0.6rem', borderRadius: '0.3rem', background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.4)', color: '#ef4444' }}>
                               ANOMALY
                             </span>

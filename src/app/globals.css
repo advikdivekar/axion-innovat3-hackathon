@@ -14,6 +14,21 @@
 
 /* ─── 3. CSS CUSTOM PROPERTIES ─────────────────────────────────────────────── */
 :root {
+  /* ── MetaMask exact design tokens ── */
+  --mm-color-primary: #f6851b;
+  --mm-color-primary-hover: #e2761b;
+  --mm-color-background-default: #ffffff;
+  --mm-color-background-alternative: #f2f4f6;
+  --mm-color-background-muted: #f8f8f8;
+  --mm-color-text-default: #24292e;
+  --mm-color-text-muted: #6a737d;
+  --mm-color-border-default: #bbc0c5;
+  --mm-color-border-muted: #d6d9dc;
+  --mm-color-overlay: rgba(0, 0, 0, 0.48);
+  --mm-color-shadow: rgba(0, 0, 0, 0.1);
+  --mm-motion-easing: cubic-bezier(0.4, 1.35, 0.5, 0.97);
+  --mm-motion-duration: 200ms;
+
   /* ── Primary accent ── */
   --cyan: #00d4ff;
   --cyan-dark: #00a8cc;
@@ -144,26 +159,34 @@ input, textarea, select { font-family: inherit; }
 
 /* ─── 9. LAYOUT UTILITIES ───────────────────────────────────────────────────── */
 .container {
-  max-width: 120rem;
+  max-width: 128rem;
   margin: 0 auto;
   padding: 0 2.4rem;
 }
 
 .container-wide {
-  max-width: 144rem;
+  max-width: 152rem;
   margin: 0 auto;
   padding: 0 2.4rem;
 }
 
 /* Legacy alias */
 .container-max {
-  max-width: 120rem;
+  max-width: 128rem;
   margin: 0 auto;
   padding: 0 2.4rem;
 }
 
 .section-padding {
-  padding: 9.6rem 0;
+  padding: 9rem 0;
+}
+
+@media (max-width: 1024px) {
+  .section-padding { padding: 6rem 0; }
+}
+
+@media (max-width: 768px) {
+  .section-padding { padding: 6.5rem 0; }
 }
 
 .section-padding-lg {
@@ -412,6 +435,177 @@ input, textarea, select { font-family: inherit; }
 .btn-ghost:hover {
   border-color: var(--cyan-500);
   background: rgba(0, 212, 255, 0.06);
+}
+
+/* ─── 13b. MetaMask BUTTON SYSTEM (.mm-btn) ────────────────────────────────── */
+
+/* Holder — clips the overflow of the text-flip animation */
+.mm-btn-holder {
+  overflow: hidden;
+  position: relative;
+  display: inline-flex;
+}
+
+/* Base button */
+.mm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  border-radius: 0.8rem;
+  padding: 1.6rem 3.2rem;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.4rem;
+  border: none;
+  text-decoration: none;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: box-shadow var(--mm-motion-duration) var(--mm-motion-easing);
+}
+
+/* Fill layer — scales in from 0 on hover */
+.mm-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--btn-color, transparent);
+  border-radius: inherit;
+  transform: scale(0);
+  transition: transform var(--mm-motion-duration) var(--mm-motion-easing);
+  z-index: 0;
+}
+
+.mm-btn:hover::before {
+  transform: scale(1.03);
+}
+
+/* Text spans — slide up/down on hover */
+.mm-btn-main,
+.mm-btn-hover {
+  position: relative;
+  z-index: 1;
+  transition: transform 210ms var(--mm-motion-easing);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.mm-btn-main {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  transform: translateY(0%);
+}
+
+.mm-btn:hover .mm-btn-main {
+  transform: translateY(-210%);
+}
+
+.mm-btn-hover {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  transform: translateY(210%);
+}
+
+.mm-btn:hover .mm-btn-hover {
+  transform: translateY(0%);
+}
+
+/* Variants */
+.mm-btn-primary {
+  background: var(--mm-color-primary);
+  color: #ffffff;
+  --btn-color: var(--mm-color-primary-hover);
+}
+
+.mm-btn-dark {
+  background: #0a0a0a;
+  color: #ffffff;
+  --btn-color: #1a1a1a;
+}
+
+.mm-btn-outline {
+  background: transparent;
+  color: var(--mm-color-primary);
+  border: 2px solid var(--mm-color-primary);
+  --btn-color: var(--mm-color-primary);
+}
+
+.mm-btn-outline:hover {
+  color: #ffffff;
+}
+
+.mm-btn-neon {
+  background: var(--cyan);
+  color: #0a0a0a;
+  --btn-color: var(--cyan-dark);
+  box-shadow: 0 0 2.4rem rgba(0, 212, 255, 0.4);
+}
+
+.mm-btn-neon:hover {
+  box-shadow: 0 0 4rem rgba(0, 212, 255, 0.6);
+}
+
+/* Size modifiers */
+.mm-btn-sm {
+  padding: 1.2rem 2.4rem;
+  font-size: 1.2rem;
+}
+
+.mm-btn-lg {
+  padding: 2rem 4rem;
+  font-size: 1.6rem;
+}
+
+/* Backward compatibility aliases */
+/* .btn still works for existing components */
+
+/* ─── 13c. TYPOGRAPHY UTILITIES ─────────────────────────────────────────────── */
+
+/* 12.8rem display hero — Orbitron, tight tracking */
+.display-hero {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12.8rem;
+  font-weight: 900;
+  line-height: 1.0;
+  letter-spacing: -0.076rem;
+  color: #ffffff;
+}
+
+@media (max-width: 1024px) {
+  .display-hero {
+    font-size: 5.6rem;
+    letter-spacing: -0.04rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .display-hero {
+    font-size: 3.2rem;
+    letter-spacing: -0.02rem;
+  }
+}
+
+.display-lg {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 6.4rem;
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.04rem;
+}
+
+@media (max-width: 1024px) {
+  .display-lg { font-size: 4rem; }
+}
+
+@media (max-width: 768px) {
+  .display-lg { font-size: 2.4rem; }
 }
 
 /* ─── 14. EYEBROW LABEL ─────────────────────────────────────────────────────── */
