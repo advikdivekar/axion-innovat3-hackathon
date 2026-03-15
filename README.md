@@ -14,7 +14,7 @@
 
 Axion is a real-time 3D intelligence platform for decentralized autonomous organizations. It renders your entire DAO — governance proposals, treasury flows, contributor networks, and security threats — as a living neural network in 3D space, powered by four specialized AI agents that run 24/7 on Google Gemini Flash 2.0.
 
-**Live Demo:** [https://axion-dao.vercel.app](https://aexion.vercel.app)
+**Live Demo:** [https://aexion.vercel.app](https://aexion.vercel.app)
 
 ![Axion Universe](./docs/screenshot.png)
 
