@@ -1,10 +1,10 @@
 // src/app/api/ai/route.ts
 import { NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
+import Gemini from '@gemini-sdk/gemini';
 import { AgentRole, AgentContext } from '@/lib/types';
 
-const anthropic = new Anthropic({
-    apiKey: process.env.ANTHROPIC_API_KEY || '',
+const gemini = new Gemini({
+    apiKey: process.env.GEMINI_API_KEY || '',
 });
 
 export const runtime = 'edge';
@@ -14,11 +14,11 @@ export async function POST(req: Request) {
         const { prompt, role, context }: { prompt: string; role: AgentRole; context: AgentContext } = await req.json();
 
         // In a hackathon, if no API key is found, we fall back to a mock stream so the UI still works.
-        if (!process.env.ANTHROPIC_API_KEY) {
+        if (!process.env.GEMINI_API_KEY) {
             const encoder = new TextEncoder();
             const mockStream = new ReadableStream({
                 async start(controller) {
-                    const text = "AI Core online. System is running in mock mode because ANTHROPIC_API_KEY is missing. Standing by for instructions.";
+                    const text = "AI Core online. System is running in mock mode because GEMINI_API_KEY is missing. Standing by for instructions.";
                     for (const word of text.split(' ')) {
                         controller.enqueue(encoder.encode(word + ' '));
                         await new Promise(r => setTimeout(r, 100));
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
             return new Response(mockStream);
         }
 
-        const response = await anthropic.messages.create({
+        const response = await gemini.messages.create({
             model: 'claude-3-5-sonnet-20240620',
             max_tokens: 1024,
             system: `You are the DAO Cosmos OS Commander. Role: ${role}. Context: ${JSON.stringify(context)}. Give concise, cinematic, and data-driven responses. Highlight node IDs in [node-id] format.`,

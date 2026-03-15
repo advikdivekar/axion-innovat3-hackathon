@@ -1,44 +1,38 @@
-// src/app/layout.tsx
 import type { Metadata } from 'next';
 import './globals.css';
-
-// These imports will error until Dev A and Dev B build them!
-// import { Providers } from './providers';
-// import { UniverseCanvas } from '@/components/canvas/UniverseCanvas';
-// import { AppShell } from '@/components/ui/AppShell';
+import { Providers } from './providers';
+import { MarketingLayoutWrapper } from '@/components/marketing/MarketingLayoutWrapper';
 
 export const metadata: Metadata = {
-    title: 'DAO Cosmos OS',
-    description: 'A living universe interface for decentralized autonomous organizations.',
+  title: 'Axion — Mission Control for DAOs',
+  description: 'Axion is an AI-powered operating system for DAOs. Real-time governance, treasury, security, and simulation in one command center.',
+  openGraph: {
+    title: 'Axion — Mission Control for DAOs',
+    description: 'AI-powered operating system for decentralized autonomous organizations.',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Axion — Mission Control for DAOs',
+    description: 'AI-powered operating system for decentralized autonomous organizations.',
+  },
 };
 
-export default function RootLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
-    return (
-        <html lang="en">
-            <body className="antialiased overflow-hidden bg-cosmos-void text-cosmos-text-primary">
-
-                {/* DEV B: Uncomment Providers once src/app/providers.tsx is built */}
-                {/* <Providers> */}
-
-                {/* DEV A: Uncomment once 3D canvas is built. This sits in the background. */}
-                {/* <div className="fixed inset-0 z-0">
-                <UniverseCanvas />
-              </div> */}
-
-                {/* DEV A: Uncomment once UI shell is built. This holds the 2D overlays. */}
-                {/* <AppShell> */}
-                <main className="relative z-10 w-full h-full">
-                    {children}
-                </main>
-                {/* </AppShell> */}
-
-                {/* </Providers> */}
-
-            </body>
-        </html>
-    );
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="canonical" href="https://axion.dao" />
+      </head>
+      <body className="antialiased">
+        <Providers>
+          <MarketingLayoutWrapper>
+            {children}
+          </MarketingLayoutWrapper>
+        </Providers>
+      </body>
+    </html>
+  );
 }
