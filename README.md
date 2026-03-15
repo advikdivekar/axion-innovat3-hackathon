@@ -542,4 +542,4 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 > *Every DAO deserves a Bloomberg Terminal — real-time, intelligent, beautiful. Axion is that terminal.*
 
-**Author:** Advik Divekar · **Hackathon:** INNOVAT3 · **Target DAO:** Uniswap (Governor Bravo · 40M UNI quorum · $2.3B treasury)
+**Author:** Advik Divekar · **Co-Author:** Heet Ranpura · **Hackathon:** INNOVAT3 · **Target DAO:** Uniswap (Governor Bravo · 40M UNI quorum · $2.3B treasury)
