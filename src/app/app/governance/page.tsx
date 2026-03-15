@@ -71,16 +71,32 @@ export default function GovernancePage() {
         style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.2rem', marginBottom: '2.4rem' }}
       >
         <motion.div variants={fadeUp}>
-          <KpiCard label="Active Proposals" end={activeCount} color={MOD} />
+          {loading ? (
+            <div className="skeleton" style={{ height: '6.4rem', borderRadius: '0.8rem' }} />
+          ) : (
+            <KpiCard label="Active Proposals" end={activeCount} color={MOD} />
+          )}
         </motion.div>
         <motion.div variants={fadeUp}>
-          <KpiCard label="Total Votes" end={Math.round(totalVotes / 1000)} suffix="K" color="#89b0ff" />
+          {loading ? (
+            <div className="skeleton" style={{ height: '6.4rem', borderRadius: '0.8rem' }} />
+          ) : (
+            <KpiCard label="Total Votes" end={Math.round(totalVotes / 1000)} suffix="K" color="#89b0ff" />
+          )}
         </motion.div>
         <motion.div variants={fadeUp}>
-          <KpiCard label="Participation %" end={participationPct} suffix="%" color="#baf24a" />
+          {loading ? (
+            <div className="skeleton" style={{ height: '6.4rem', borderRadius: '0.8rem' }} />
+          ) : (
+            <KpiCard label="Participation %" end={participationPct} suffix="%" color="#baf24a" />
+          )}
         </motion.div>
         <motion.div variants={fadeUp}>
-          <KpiCard label="Quorum Reached" end={quorumReached} color="#f59e0b" />
+          {loading ? (
+            <div className="skeleton" style={{ height: '6.4rem', borderRadius: '0.8rem' }} />
+          ) : (
+            <KpiCard label="Quorum Reached" end={quorumReached} color="#f59e0b" />
+          )}
         </motion.div>
       </motion.div>
 

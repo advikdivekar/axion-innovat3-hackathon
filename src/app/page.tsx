@@ -1,13 +1,265 @@
-// src/app/page.tsx
-export default function HomePage() {
+'use client';
+
+import Link from 'next/link';
+import { useState, useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import {
+  Globe2, Shield, DollarSign, Users, ShieldAlert, GitBranch,
+  Bot, Brain, ArrowRight, Zap, Activity,
+} from 'lucide-react';
+import { fadeUp, fadeIn, stagger, slideLeft, slideRight, viewport } from '@/lib/animations';
+import { useCountUp } from '@/hooks/useCountUp';
+
+// ─── Section 1: Hero CSS sphere ──────────────────────────────────────────────
+function HeroSphere() {
+  const nodes = [
+    { label: 'GOV',   color: '#d075ff', top: '10%', left: '46%' },
+    { label: 'TREAS', color: '#f59e0b', top: '42%', left: '86%' },
+    { label: 'SEC',   color: '#ff5c16', top: '74%', left: '68%' },
+    { label: 'SIM',   color: '#baf24a', top: '70%', left: '18%' },
+    { label: 'CONT',  color: '#89b0ff', top: '35%', left: '4%'  },
+    { label: 'AI',    color: '#d075ff', top: '16%', left: '70%' },
+  ];
+
+  const connections = [
+    [0, 1], [0, 5], [1, 2], [2, 3], [3, 4], [4, 0], [5, 2], [1, 3],
+  ];
+
   return (
-    <div className="flex flex-col items-center justify-center w-full h-screen bg-black text-[#00f0ff]">
-      <h1 className="text-2xl font-bold tracking-widest uppercase">DAO Cosmos OS</h1>
-      <p className="mt-4 text-sm text-gray-400">Backend systems are online.</p>
-      <p className="mt-2 text-xs text-gray-500">Waiting for Dev A to build visual interface...</p>
+    <div style={{ position: 'relative', width: 480, height: 480, flexShrink: 0 }}>
+      {/* Background glow */}
+      <div style={{
+        position: 'absolute', inset: 0, borderRadius: '50%',
+        background: 'radial-gradient(circle at 40% 40%, rgba(0,212,255,0.12) 0%, rgba(208,117,255,0.08) 50%, transparent 70%)',
+      }} />
+
+      {/* Orbital rings */}
+      {[
+        { inset: '0%',  color: 'rgba(0,212,255,0.2)',   dur: '22s', tX: 'rotateX(75deg)', rev: false },
+        { inset: '15%', color: 'rgba(208,117,255,0.18)',dur: '16s', tX: 'rotateX(65deg) rotateY(30deg)', rev: true },
+        { inset: '3%',  color: 'rgba(0,212,255,0.25)',  dur: '32s', tX: 'rotateX(82deg)', rev: false },
+      ].map((ring, i) => (
+        <div key={i} style={{
+          position: 'absolute', inset: ring.inset,
+          borderRadius: '50%', border: `1.5px solid ${ring.color}`,
+          transform: ring.tX,
+          animation: `ring-spin-${ring.rev ? 'rev' : 'fwd'} ${ring.dur} linear infinite`,
+        }} />
+      ))}
+
+      {/* SVG connections */}
+      <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.3 }} viewBox="0 0 480 480">
+        {connections.map(([a, b], i) => {
+          const na = nodes[a], nb = nodes[b];
+          const ax = parseFloat(na.left) / 100 * 480, ay = parseFloat(na.top) / 100 * 480;
+          const bx = parseFloat(nb.left) / 100 * 480, by = parseFloat(nb.top) / 100 * 480;
+          return (
+            <line key={i} x1={ax} y1={ay} x2={bx} y2={by}
+              stroke="#00d4ff" strokeWidth="0.8" strokeDasharray="4 4"
+              style={{ animation: `dash-flow ${6 + i}s linear infinite` }}
+            />
+          );
+        })}
+      </svg>
+
+      {/* Center core */}
+      <div style={{
+        position: 'absolute', top: '50%', left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 56, height: 56, borderRadius: '50%',
+        background: '#0a0a0a', border: '2px solid rgba(0,212,255,0.5)',
+        boxShadow: '0 0 3rem rgba(0,212,255,0.3)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2,
+      }}>
+        <span style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '0.5rem', fontWeight: 700, color: '#00d4ff', letterSpacing: '0.1em' }}>
+          AXION
+        </span>
+      </div>
+
+      {/* Module nodes */}
+      {nodes.map((n) => (
+        <div key={n.label} style={{ position: 'absolute', top: n.top, left: n.left, transform: 'translate(-50%, -50%)', zIndex: 3 }}>
+          <div style={{
+            position: 'absolute', inset: -6, borderRadius: '50%',
+            background: n.color, opacity: 0.15, animation: 'ping-glow 2s ease-in-out infinite',
+          }} />
+          <div style={{ width: 12, height: 12, borderRadius: '50%', background: n.color, boxShadow: `0 0 1rem ${n.color}80`, position: 'relative' }} />
+          <div style={{
+            position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
+            marginTop: 4, fontSize: '0.55rem', fontFamily: 'JetBrains Mono, monospace', color: n.color, whiteSpace: 'nowrap',
+          }}>{n.label}</div>
+        </div>
+      ))}
+
+      {/* Floating stat cards */}
+      {[
+        { label: 'GOVERNANCE', color: '#d075ff', value: '94%', sub: 'Health Score', pos: { bottom: '15%', left: '-3.2rem' } },
+        { label: 'TREASURY',   color: '#f59e0b', value: '$4.2B', sub: 'Total Value', pos: { top: '15%', right: '-1.6rem' } },
+        { label: 'SECURITY',   color: '#ff5c16', value: '2 Threats', sub: 'Active Alerts', pos: { top: '50%', right: '-4.8rem', transform: 'translateY(-50%)' } },
+      ].map((card) => (
+        <div key={card.label} style={{
+          position: 'absolute', ...card.pos,
+          background: '#ffffff', border: '1px solid #e2e8f0',
+          borderRadius: '1.2rem', padding: '1rem 1.4rem',
+          boxShadow: '0 0.8rem 3.2rem rgba(0,0,0,0.12)', minWidth: 130,
+        }}>
+          <div style={{ fontSize: '0.65rem', fontWeight: 600, color: card.color, letterSpacing: '0.05em', marginBottom: 2 }}>
+            ● {card.label}
+          </div>
+          <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0a0a0a', lineHeight: 1 }}>{card.value}</div>
+          <div style={{ fontSize: '0.65rem', color: '#94a3b8', marginTop: 2 }}>{card.sub}</div>
+        </div>
+      ))}
+
+      <style>{`
+        @keyframes ring-spin-fwd { from { transform: rotateX(75deg) rotateZ(0deg); } to { transform: rotateX(75deg) rotateZ(360deg); } }
+        @keyframes ring-spin-rev { from { transform: rotateX(65deg) rotateY(30deg) rotateZ(0deg); } to { transform: rotateX(65deg) rotateY(30deg) rotateZ(-360deg); } }
+        @keyframes ping-glow { 0%,100% { transform: scale(1); opacity: 0.15; } 50% { transform: scale(2.5); opacity: 0; } }
+        @keyframes dash-flow { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -32; } }
+      `}</style>
     </div>
   );
-=======
+}
+
+// ─── Section 2: Count-up stat ─────────────────────────────────────────────────
+function StatCounter({ end, prefix = '', suffix = '', label }: { end: number; prefix?: string; suffix?: string; label: string }) {
+  const { ref, value } = useCountUp({ end, duration: 1800 });
+  return (
+    <div style={{ textAlign: 'center' }}>
+      <div ref={ref as React.RefObject<HTMLDivElement>} style={{ fontSize: 'clamp(2.8rem, 3.5vw, 4rem)', fontWeight: 900, color: '#0a0a0a', lineHeight: 1, fontFamily: 'Inter, sans-serif' }}>
+        {prefix}{value}{suffix}
+      </div>
+      <div style={{ fontSize: '1.1rem', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#94a3b8', marginTop: '0.6rem', fontFamily: 'Inter, sans-serif' }}>
+        {label}
+      </div>
+    </div>
+  );
+}
+
+// ─── Section 7: AI Terminal ───────────────────────────────────────────────────
+function AIDemoTerminal() {
+  const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const PRESETS = [
+    'What are the current governance risks?',
+    'Is the treasury healthy?',
+    'Who are the most active contributors?',
+    'Are there any security threats?',
+  ];
+
+  async function send(text?: string) {
+    const msg = text ?? input.trim();
+    if (!msg || loading) return;
+    setInput('');
+    setMessages(prev => [...prev, { role: 'user', content: msg }]);
+    setLoading(true);
+    try {
+      const res = await fetch('/api/ai', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: msg }),
+      });
+      const reader = res.body?.getReader();
+      const decoder = new TextDecoder();
+      let aiText = '';
+      setMessages(prev => [...prev, { role: 'assistant', content: '' }]);
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          aiText += decoder.decode(value, { stream: true });
+          setMessages(prev => { const u = [...prev]; u[u.length - 1] = { role: 'assistant', content: aiText }; return u; });
+        }
+      }
+    } catch {
+      setMessages(prev => [...prev, { role: 'assistant', content: 'Error connecting to AI agent.' }]);
+    }
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  }, [messages]);
+
+  return (
+    <div className="terminal" style={{ maxWidth: '64rem', margin: '0 auto' }}>
+      <div className="terminal-bar">
+        <div className="terminal-dot" style={{ background: '#dc2626' }} />
+        <div className="terminal-dot" style={{ background: '#f59e0b' }} />
+        <div className="terminal-dot" style={{ background: '#22c55e' }} />
+        <span style={{ marginLeft: '0.8rem', fontSize: '1.1rem', color: 'rgba(255,255,255,0.4)', fontFamily: 'JetBrains Mono, monospace' }}>
+          axion — ai agent
+        </span>
+      </div>
+      {/* Presets */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem', padding: '1.2rem 1.6rem', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+        {PRESETS.map((p) => (
+          <button key={p} onClick={() => send(p)} style={{
+            background: 'rgba(0,212,255,0.08)', border: '1px solid rgba(0,212,255,0.2)',
+            borderRadius: '0.6rem', padding: '0.4rem 1rem', fontSize: '1.1rem',
+            color: '#00d4ff', cursor: 'pointer', fontFamily: 'JetBrains Mono, monospace',
+            transition: 'background 150ms',
+          }}
+            onMouseEnter={e => (e.currentTarget.style.background = 'rgba(0,212,255,0.15)')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'rgba(0,212,255,0.08)')}
+          >
+            {p}
+          </button>
+        ))}
+      </div>
+      {/* Messages */}
+      <div ref={scrollRef} className="terminal-body" style={{ minHeight: '18rem', maxHeight: '24rem', overflowY: 'auto' }}>
+        {messages.length === 0 && (
+          <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: '1.2rem' }}>Click a preset or type a question below...</div>
+        )}
+        {messages.map((m, i) => (
+          <div key={i} style={{ marginBottom: '1rem' }}>
+            {m.role === 'user' ? (
+              <div style={{ color: '#00d4ff', fontSize: '1.2rem' }}>
+                <span style={{ opacity: 0.6 }}>&gt; </span>{m.content}
+              </div>
+            ) : (
+              <div style={{ color: '#86efac', fontSize: '1.2rem', whiteSpace: 'pre-wrap' }}>
+                <span style={{ opacity: 0.7 }}>◆ </span>
+                {m.content || (loading && i === messages.length - 1 ? '...' : '')}
+              </div>
+            )}
+          </div>
+        ))}
+        {loading && messages[messages.length - 1]?.role === 'user' && (
+          <div style={{ color: '#86efac', fontSize: '1.2rem' }}>◆ <span className="cursor-blink" /></div>
+        )}
+      </div>
+      {/* Input */}
+      <div style={{ display: 'flex', gap: '0.8rem', padding: '1rem 1.6rem', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+        <span style={{ color: '#00d4ff', fontFamily: 'JetBrains Mono, monospace', fontSize: '1.3rem' }}>&gt;</span>
+        <input
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && send()}
+          placeholder="Ask anything about your DAO..."
+          style={{
+            flex: 1, background: 'transparent', border: 'none', outline: 'none',
+            color: '#e2e8f0', fontFamily: 'JetBrains Mono, monospace', fontSize: '1.2rem',
+          }}
+        />
+        <button onClick={() => send()} disabled={loading || !input.trim()} style={{
+          background: '#00d4ff', border: 'none', borderRadius: '0.6rem', padding: '0.4rem 1.2rem',
+          color: '#0a0a0a', fontSize: '1.1rem', cursor: 'pointer', fontWeight: 700,
+          opacity: loading || !input.trim() ? 0.5 : 1,
+        }}>
+          Send
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+export default function HomePage() {
   return (
     <>
       {/* ══════════════════════════════════════════════════════════════════
@@ -444,5 +696,4 @@ export default function HomePage() {
       </section>
     </>
   );
->>>>>>> 101409a (v2 axion)
 }

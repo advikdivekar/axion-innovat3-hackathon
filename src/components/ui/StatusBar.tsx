@@ -21,7 +21,7 @@ function useBlockNumber() {
     const id = setInterval(() => setBlock((b) => b + 1), 12000);
     return () => clearInterval(id);
   }, []);
-  return block.toLocaleString();
+  return block.toLocaleString('en-US');
 }
 
 const MOCK_WALLET = '0x1a9C...35BC';
@@ -89,12 +89,12 @@ export function StatusBar() {
           <span style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.9rem', color: 'rgba(255,255,255,0.2)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
             BLOCK
           </span>
-          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.9rem', color: 'rgba(255,255,255,0.5)' }}>
+          <span suppressHydrationWarning style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.9rem', color: 'rgba(255,255,255,0.5)' }}>
             {block}
           </span>
         </div>
 
-        <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.9rem', color: 'rgba(255,255,255,0.3)' }}>
+        <span suppressHydrationWarning style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.9rem', color: 'rgba(255,255,255,0.3)' }}>
           {clock}
         </span>
 

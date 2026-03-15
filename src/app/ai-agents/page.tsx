@@ -24,7 +24,7 @@ const agents = [
     desc: 'Watches every treasury wallet, DeFi position, and token flow 24/7. Calculates runway projections and flags unusual outflows instantly.',
   },
   {
-    name: 'ARGUS',
+    name: 'AEGIS',
     role: 'Security Sentinel',
     color: '#ff5c16',
     Icon: ShieldAlert,
@@ -32,8 +32,8 @@ const agents = [
     desc: 'Runs continuous Sybil cluster analysis, governance attack simulations, and real-time threat feeds — surfacing risks before they materialize.',
   },
   {
-    name: 'ORACLE',
-    role: 'Scenario Forecaster',
+    name: 'NEXUS',
+    role: 'Operations Forecaster',
     color: '#baf24a',
     Icon: GitBranch,
     queries: ['"Model a 40% market crash."', '"Simulate governance takeover risk."'],
@@ -49,10 +49,18 @@ const howSteps = [
 
 // ─── AI Terminal ──────────────────────────────────────────────────────────────
 
+const AGENT_CHIPS = [
+  { label: 'HERMES', key: 'governance', color: '#d075ff' },
+  { label: 'ATLAS',  key: 'treasury',   color: '#f59e0b' },
+  { label: 'AEGIS',  key: 'security',   color: '#ff5c16' },
+  { label: 'NEXUS',  key: 'operations', color: '#baf24a' },
+];
+
 function AIDemoTerminal() {
   const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [activeAgent, setActiveAgent] = useState('general');
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const PRESETS = [
@@ -72,7 +80,7 @@ function AIDemoTerminal() {
       const res = await fetch('/api/ai', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: msg }),
+        body: JSON.stringify({ message: msg, agent: activeAgent }),
       });
       const reader = res.body?.getReader();
       const decoder = new TextDecoder();
@@ -113,6 +121,31 @@ function AIDemoTerminal() {
           <div className="pulse-dot" style={{ width: '0.6rem', height: '0.6rem' }} />
           <span style={{ fontSize: '1rem', color: '#22c55e', fontFamily: 'JetBrains Mono, monospace' }}>LIVE</span>
         </div>
+      </div>
+
+      {/* Agent selector chips */}
+      <div style={{ display: 'flex', gap: '0.6rem', padding: '1rem 1.6rem', borderBottom: '1px solid rgba(255,255,255,0.04)', flexWrap: 'wrap' }}>
+        {AGENT_CHIPS.map((chip) => (
+          <button
+            key={chip.key}
+            onClick={() => setActiveAgent(chip.key)}
+            style={{
+              background: activeAgent === chip.key ? `${chip.color}20` : 'transparent',
+              border: `1px solid ${activeAgent === chip.key ? chip.color : 'rgba(255,255,255,0.12)'}`,
+              borderRadius: '0.6rem',
+              padding: '0.3rem 0.9rem',
+              fontSize: '1rem',
+              color: activeAgent === chip.key ? chip.color : 'rgba(255,255,255,0.4)',
+              cursor: 'pointer',
+              fontFamily: 'JetBrains Mono, monospace',
+              fontWeight: 700,
+              letterSpacing: '0.06em',
+              transition: 'all 150ms',
+            }}
+          >
+            {chip.label}
+          </button>
+        ))}
       </div>
 
       {/* Presets */}
@@ -251,7 +284,7 @@ export default function AIAgentsPage() {
                 fontFamily: 'Inter, sans-serif',
               }}
             >
-              HERMES, ATLAS, ARGUS, and ORACLE run 24/7 across every data feed, proposal, and wallet your DAO touches. Intelligence without sleep.
+              HERMES, ATLAS, AEGIS, and NEXUS run 24/7 across every data feed, proposal, and wallet your DAO touches. Intelligence without sleep.
             </motion.p>
             <motion.div variants={fadeUp} style={{ display: 'flex', gap: '1.2rem', flexWrap: 'wrap' }}>
               <Link href="/app" className="btn btn-neon btn-lg">
