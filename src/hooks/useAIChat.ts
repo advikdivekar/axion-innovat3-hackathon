@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 
 export type ChatMessage = { role: 'user' | 'assistant'; content: string };
 
-export function useAIChat() {
+export function useAIChat(agent?: string) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -20,7 +20,7 @@ export function useAIChat() {
       const res = await fetch('/api/ai', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: msg }),
+        body: JSON.stringify({ message: msg, agent: agent ?? 'general' }),
       });
       const reader = res.body?.getReader();
       const decoder = new TextDecoder();

@@ -34,28 +34,31 @@ function EarthGlobe() {
     <group>
       {/* Outer glow sphere */}
       <mesh ref={glowRef}>
-        <sphereGeometry args={[2.75, 32, 32]} />
+        <sphereGeometry args={[3.85, 32, 32]} />
         <meshBasicMaterial color="#00d4ff" transparent opacity={0.05} side={THREE.BackSide} />
       </mesh>
 
       {/* Earth body */}
       <mesh ref={earthRef}>
-        <sphereGeometry args={[2.2, 64, 64]} />
+        <sphereGeometry args={[3.1, 64, 64]} />
         <meshPhongMaterial
           color="#1a1a3e"
-          emissive="#0a0a1e"
+          emissive="#001133"
+          emissiveIntensity={0.3}
           shininess={40}
         />
       </mesh>
 
       {/* Wireframe overlay */}
       <mesh>
-        <sphereGeometry args={[2.23, 24, 24]} />
-        <meshBasicMaterial color="#00d4ff" wireframe transparent opacity={0.08} />
+        <sphereGeometry args={[3.14, 24, 24]} />
+        <meshBasicMaterial color="#00d4ff" wireframe transparent opacity={0.40} />
       </mesh>
 
       {/* Center glow point */}
-      <pointLight position={[0, 0, 0]} color="#00d4ff" intensity={1.5} distance={14} />
+      <pointLight position={[0, 0, 0]} color="#00d4ff" intensity={1.5} distance={18} />
+      {/* Secondary key light for globe definition */}
+      <pointLight position={[6, 4, 6]} color="#ffffff" intensity={0.6} distance={20} />
     </group>
   );
 }
@@ -260,11 +263,11 @@ function Scene({ onHover, onNodeClick }: {
       {MODULE_NODES.map((n) => (
         <Text
           key={`label-${n.id}`}
-          position={[n.position[0], n.position[1] - n.size - 0.45, n.position[2]]}
+          position={[n.position[0], n.position[1] + n.size + 0.6, n.position[2]]}
           fontSize={0.22}
           color={n.color}
           anchorX="center"
-          anchorY="top"
+          anchorY="bottom"
         >
           {n.id.toUpperCase()}
         </Text>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { UniverseCanvas } from '@/components/canvas/UniverseCanvas';
 import { StatusBar } from '@/components/ui/StatusBar';
 import { Sidebar } from '@/components/ui/Sidebar';
@@ -63,6 +64,21 @@ export default function AppLayout({ children }: AppLayoutProps) {
             transition: 'left 250ms cubic-bezier(0.16,1,0.3,1)',
           }}
         >
+          {/* Exit button — visible on all /app/* routes */}
+          <div style={{ position: 'absolute', top: '1.6rem', right: '2rem', zIndex: 40, pointerEvents: 'auto' }}>
+            <Link href="/" style={{
+              display: 'inline-flex', alignItems: 'center', gap: '0.6rem',
+              padding: '0.7rem 1.4rem',
+              background: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              borderRadius: '0.8rem',
+              color: 'rgba(255,255,255,0.7)',
+              fontSize: '1.2rem', fontWeight: 600,
+              fontFamily: 'Inter, sans-serif',
+              textDecoration: 'none',
+              backdropFilter: 'blur(1rem)',
+            }}>← Exit to Site</Link>
+          </div>
           {children}
         </main>
       </div>

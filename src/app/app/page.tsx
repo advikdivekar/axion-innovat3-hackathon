@@ -4,11 +4,11 @@ import Link from 'next/link';
 import { Globe2, Shield, DollarSign, Users, ShieldAlert, GitBranch } from 'lucide-react';
 
 const MODULES = [
-  { icon: Shield,      color: '#7c3aed', label: 'Governance',   href: '/app/governance',   desc: 'Proposals & votes' },
-  { icon: DollarSign,  color: '#d97706', label: 'Treasury',     href: '/app/treasury',     desc: 'Token flows & runway' },
-  { icon: Users,       color: '#0ea5e9', label: 'Contributors', href: '/app/contributors', desc: 'Reputation & XP' },
-  { icon: ShieldAlert, color: '#dc2626', label: 'Security',     href: '/app/security',     desc: 'Threats & alerts' },
-  { icon: GitBranch,   color: '#16a34a', label: 'Simulator',    href: '/app/simulator',    desc: 'Scenario forecasting' },
+  { icon: Shield,      color: '#d075ff', label: 'Governance',   href: '/app/governance',   desc: 'Proposals & votes' },
+  { icon: DollarSign,  color: '#baf24a', label: 'Treasury',     href: '/app/treasury',     desc: 'Token flows & runway' },
+  { icon: Users,       color: '#89b0ff', label: 'Contributors', href: '/app/contributors', desc: 'Reputation & XP' },
+  { icon: ShieldAlert, color: '#ff5c16', label: 'Security',     href: '/app/security',     desc: 'Threats & alerts' },
+  { icon: GitBranch,   color: '#baf24a', label: 'Simulator',    href: '/app/simulator',    desc: 'Scenario forecasting' },
 ];
 
 export default function AppHomePage() {
@@ -37,7 +37,7 @@ export default function AppHomePage() {
           fontSize: '0.65rem',
           fontWeight: 700,
           letterSpacing: '0.25em',
-          color: 'rgba(14,165,233,0.6)',
+          color: 'rgba(255,92,22,0.6)',
           textTransform: 'uppercase',
         }}>
           Axion Universe
@@ -72,7 +72,6 @@ export default function AppHomePage() {
               borderRadius: 10,
               cursor: 'pointer',
               transition: 'background 150ms, border-color 150ms, transform 150ms',
-              backdropFilter: 'blur(12px)',
             }}
               onMouseEnter={e => {
                 (e.currentTarget as HTMLElement).style.background = `${color}12`;
