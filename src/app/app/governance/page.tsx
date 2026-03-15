@@ -4,64 +4,11 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { fadeUp, stagger, viewport } from '@/lib/animations';
 import { useCountUp } from '@/hooks/useCountUp';
+import { useApiData } from '@/hooks/useApiData';
+import { getProposals } from '@/lib/api';
+import type { Proposal, VoteRecord } from '@/lib/types';
 
 const MOD = '#d075ff';
-
-interface Voter {
-  id: string;
-  voterENS?: string;
-  voter: string;
-  support: number;
-  weight: number;
-  isWhale: boolean;
-}
-
-interface Proposal {
-  id: string;
-  title: string;
-  status: string;
-  forVotes: number;
-  againstVotes: number;
-  abstainVotes: number;
-  quorum: number;
-  quorumReached: boolean;
-  endTimestamp: string;
-  impactScore: number;
-  aiSummary: string;
-  totalVoters: number;
-  topVoters: Voter[];
-  proposerENS?: string;
-}
-
-const MOCK_PROPOSALS: Proposal[] = [
-  {
-    id: '1', title: 'Treasury Allocation Q2 2026', status: 'active',
-    forVotes: 4200000, againstVotes: 980000, abstainVotes: 120000,
-    quorum: 3000000, quorumReached: true, endTimestamp: new Date(Date.now() + 86400000 * 3).toISOString(),
-    impactScore: 82, aiSummary: 'Proposal to reallocate 15% of treasury reserves into yield-bearing stablecoins to improve runway metrics.', totalVoters: 342,
-    topVoters: [
-      { id: 'v1', voterENS: 'atlas.eth', voter: '0xabc', support: 1, weight: 980000, isWhale: true },
-      { id: 'v2', voterENS: 'hermes.eth', voter: '0xdef', support: 1, weight: 620000, isWhale: true },
-      { id: 'v3', voter: '0x1234567890ab', support: 0, weight: 210000, isWhale: false },
-    ],
-  },
-  {
-    id: '2', title: 'Fee Switch Activation', status: 'active',
-    forVotes: 2100000, againstVotes: 1850000, abstainVotes: 50000,
-    quorum: 3000000, quorumReached: true, endTimestamp: new Date(Date.now() + 86400000 * 1).toISOString(),
-    impactScore: 74, aiSummary: 'Activating the protocol fee switch would redirect 0.05% of swap volume to the DAO treasury.', totalVoters: 198,
-    topVoters: [
-      { id: 'v4', voterENS: 'oracle.eth', voter: '0x999', support: 1, weight: 540000, isWhale: true },
-    ],
-  },
-  {
-    id: '3', title: 'Protocol Upgrade v3.1', status: 'active',
-    forVotes: 5800000, againstVotes: 210000, abstainVotes: 90000,
-    quorum: 3000000, quorumReached: true, endTimestamp: new Date(Date.now() + 86400000 * 7).toISOString(),
-    impactScore: 91, aiSummary: 'Upgrade to v3.1 introduces flash loan protection and reduces gas costs by an estimated 18%.', totalVoters: 512,
-    topVoters: [],
-  },
-];
 
 function fmt(n: number) {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
@@ -82,25 +29,15 @@ function KpiCard({ label, end, prefix, suffix, color }: { label: string; end: nu
 }
 
 export default function GovernancePage() {
-  const [proposals, setProposals] = useState<Proposal[]>([]);
+  const { data, loading } = useApiData(getProposals);
+  const proposals: Proposal[] = data ?? [];
   const [selected, setSelected] = useState<Proposal | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/blockchain/proposals')
-      .then(r => r.json())
-      .then((data: Proposal[]) => {
-        const list = Array.isArray(data) && data.length > 0 ? data : MOCK_PROPOSALS;
-        setProposals(list);
-        setSelected(list[0] ?? null);
-        setLoading(false);
-      })
-      .catch(() => {
-        setProposals(MOCK_PROPOSALS);
-        setSelected(MOCK_PROPOSALS[0]);
-        setLoading(false);
-      });
-  }, []);
+    if (proposals.length > 0 && selected === null) {
+      setSelected(proposals[0]);
+    }
+  }, [proposals, selected]);
 
   const totalVotes = proposals.reduce((s, p) => s + p.forVotes + p.againstVotes + p.abstainVotes, 0);
   const activeCount = proposals.filter(p => p.status === 'active').length;
@@ -237,7 +174,7 @@ export default function GovernancePage() {
               <div className="skeleton" style={{ height: '6.4rem', borderRadius: '0.8rem' }} />
             ) : selected && selected.topVoters.length > 0 ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-                {selected.topVoters.map(v => (
+                {(selected.topVoters as VoteRecord[]).map(v => (
                   <div key={v.id} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.8rem 1.2rem', background: 'rgba(255,255,255,0.03)', borderRadius: '0.6rem' }}>
                     <div style={{ width: '0.6rem', height: '0.6rem', borderRadius: '50%', background: v.support === 1 ? '#22c55e' : v.support === 0 ? '#ef4444' : '#f59e0b', flexShrink: 0 }} />
                     <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '1.1rem', color: 'var(--text-primary)', flex: 1 }}>
@@ -278,7 +215,7 @@ export default function GovernancePage() {
             )}
           </div>
 
-          {/* Quorum status if proposal selected */}
+          {/* Quorum status */}
           {!loading && selected && (
             <div className="app-card">
               <div style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '1rem', fontWeight: 700, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.35)', marginBottom: '1rem' }}>
