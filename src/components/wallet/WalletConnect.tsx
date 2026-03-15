@@ -1,124 +1,59 @@
+// src/components/wallet/WalletConnect.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import clsx from 'clsx';
 
-export function WalletConnect() {
-  const [connected, setConnected] = useState(false);
-  const [address, setAddress] = useState('');
+interface WalletConnectProps {
+  onConnect?: (address: string) => void;
+  compact?: boolean;
+}
 
-  const connect = async () => {
-    if (typeof window === 'undefined') return;
-    const eth = (window as unknown as { ethereum?: { request: (args: { method: string }) => Promise<string[]> } }).ethereum;
-    if (!eth) {
-      // Fallback: show mock connected state
-      setAddress('0x1a9C...35BC');
-      setConnected(true);
-      return;
-    }
+export function WalletConnect({ onConnect, compact = false }: WalletConnectProps) {
+  const [address, setAddress] = useState<string | null>(null);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const connect = useCallback(async () => {
+    if (typeof window === 'undefined' || !window.ethereum) { setError('No wallet detected'); return; }
+    setIsConnecting(true);
+    setError(null);
     try {
-      const accounts = await eth.request({ method: 'eth_requestAccounts' });
-      if (accounts[0]) {
-        setAddress(`${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`);
-        setConnected(true);
-      }
-    } catch {
-      // user rejected
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      if (accounts && accounts.length > 0) { setAddress(accounts[0]); onConnect?.(accounts[0]); }
+    } catch (err: any) {
+      setError(err.code === 4001 ? 'Connection rejected' : 'Connection failed');
+    } finally {
+      setIsConnecting(false);
     }
-  };
+  }, [onConnect]);
 
-  const disconnect = () => {
-    setConnected(false);
-    setAddress('');
-  };
+  const truncate = (addr: string) => `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 
-  if (connected) {
+  if (address) {
     return (
-      <button
-        onClick={disconnect}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-          padding: '7px 12px',
-          borderRadius: 4,
-          background: 'rgba(0,240,255,0.06)',
-          border: '1px solid rgba(0,240,255,0.18)',
-          cursor: 'pointer',
-          width: '100%',
-          transition: 'background 150ms ease',
-        }}
-        onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = 'rgba(0,240,255,0.1)')}
-        onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = 'rgba(0,240,255,0.06)')}
-      >
-        <div
-          style={{
-            width: 6,
-            height: 6,
-            borderRadius: '50%',
-            background: 'var(--green-500)',
-            boxShadow: '0 0 6px var(--green-500)',
-            flexShrink: 0,
-          }}
-        />
-        <span
-          style={{
-            fontFamily: 'JetBrains Mono, monospace',
-            fontSize: '0.68rem',
-            color: 'var(--cyan-500)',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-          }}
-        >
-          {address}
-        </span>
+      <button onClick={() => setAddress(null)} className="flex items-center gap-2 px-3 py-1.5 rounded border border-[rgba(0,255,136,0.3)] text-[#00ff88] hover:border-[rgba(0,255,136,0.5)] transition-all duration-200 font-mono text-xs">
+        <div className="w-2 h-2 rounded-full bg-[#00ff88]" />
+        {truncate(address)}
       </button>
     );
   }
 
   return (
-    <button
-      onClick={connect}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 6,
-        padding: '7px 12px',
-        borderRadius: 4,
-        background: 'rgba(0,240,255,0.08)',
-        border: '1px solid rgba(0,240,255,0.25)',
-        cursor: 'pointer',
-        width: '100%',
-        transition: 'all 150ms ease',
-      }}
-      onMouseEnter={e => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.background = 'rgba(0,240,255,0.14)';
-        el.style.borderColor = 'rgba(0,240,255,0.4)';
-      }}
-      onMouseLeave={e => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.background = 'rgba(0,240,255,0.08)';
-        el.style.borderColor = 'rgba(0,240,255,0.25)';
-      }}
-    >
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--cyan-500)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="1" y="6" width="22" height="14" rx="2" />
-        <line x1="1" y1="10" x2="23" y2="10" />
-      </svg>
-      <span
-        style={{
-          fontFamily: 'Orbitron, sans-serif',
-          fontSize: '0.6rem',
-          fontWeight: 700,
-          letterSpacing: '0.12em',
-          color: 'var(--cyan-500)',
-          whiteSpace: 'nowrap',
-        }}
-      >
-        CONNECT
-      </span>
-    </button>
+    <div className="flex flex-col items-end gap-1">
+      <button onClick={connect} disabled={isConnecting} className={clsx('px-3 py-1.5 rounded text-xs font-display uppercase tracking-[0.12em] border border-[rgba(0,240,255,0.3)] text-[#00f0ff] hover:border-[rgba(0,240,255,0.6)] hover:shadow-[0_0_15px_rgba(0,240,255,0.15)] transition-all duration-200', isConnecting && 'opacity-50 animate-pulse cursor-wait')}>
+        {isConnecting ? 'CONNECTING...' : compact ? 'CONNECT' : 'CONNECT WALLET'}
+      </button>
+      {error && <span className="text-[9px] text-[#ff2d6a] font-mono">{error}</span>}
+    </div>
   );
+}
+
+declare global {
+  interface Window {
+    ethereum?: {
+      request: (args: { method: string; params?: any[] }) => Promise<any>;
+      on?: (event: string, handler: (...args: any[]) => void) => void;
+    };
+  }
 }
