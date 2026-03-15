@@ -51,4 +51,8 @@ next-env.d.ts
 
 # custom
 *.pdf
-.agent/ 
+.agent/
+
+# Internal planning docs — README.md is the only .md tracked
+AXION_REVAMP_MASTER.md
+docs/

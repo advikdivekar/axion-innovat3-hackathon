@@ -46,7 +46,7 @@ Axion gives DAO operators, delegates, and community members a single command cen
 
 **Threat Detection** — The Security Sentinel module runs continuous heuristic analysis across six threat categories: Sybil clusters, treasury drain patterns, governance manipulation, suspicious wallet behavior, flash loan risk, and contract exploits. Each threat includes evidence, risk score, affected entity, and AI-generated remediation recommendations.
 
-**Multiverse Simulator** — Input any governance scenario (market crash, governance takeover, treasury depletion, whale influence, contributor exodus, protocol exploit) and receive three branching timeline forecasts with probability scores, sentiment labels, survival runway projections, and narrative analysis. Powered by the `/api/simulate` POST endpoint.
+**Multiverse Simulator** — Input any governance scenario (market crash, governance takeover, treasury depletion, whale influence, contributor exodus, protocol exploit) and receive three branching timeline forecasts with probability scores, sentiment labels, survival runway projections, and narrative analysis.
 
 **Built for Scale** — Axion is architected for any Governor Bravo DAO. The `DAO_CONFIG` in `src/lib/constants.ts` is the single source of truth for contract addresses, quorum thresholds, and whale definitions. Swap in any DAO's config and the entire platform reconfigures.
 
@@ -54,24 +54,20 @@ Axion gives DAO operators, delegates, and community members a single command cen
 
 ## Features
 
-| Feature | Description | Status |
-|---|---|---|
-| **3D Universe Canvas** | Real-time Three.js neural network — Earth core + 6 satellite module nodes, orbital connections, traveling particles | ✅ Live |
-| **Governance Arena** | Live proposal list, vote bars (FOR/AGAINST/ABSTAIN), whale voter tracking, quorum progress, AI proposal summaries | ✅ Live |
-| **Treasury Reactor** | Multi-token balance display ($2.3B Uniswap treasury), 24h/7d flow tracking, runway calculator, health score, anomaly flags | ✅ Live |
-| **Contributor Galaxy** | 20+ contributor profiles, reputation scores, XP/level system, contributor classes (Architect/Diplomat/Sentinel/Merchant/Explorer) | ✅ Live |
-| **Security Sentinel** | Active threat list with severity badges (critical/high/medium/low), threat types (Sybil/flash loan/drain/exploit), evidence viewer | ✅ Live |
-| **Multiverse Simulator** | 7 scenario types, 3 branching timelines per simulation, probability scores, survival runway, treasury/contributor impact projections | ✅ Live |
-| **AI Agent Terminal** | HERMES/ATLAS/AEGIS/NEXUS + General agent, Gemini 2.0 Flash streaming, agent-selector chips, preset queries | ✅ Live |
-| **Loading Screen** | Animated system initialization sequence with module boot messages | ✅ Live |
-| **Status Bar** | Live block number (ETH mainnet ~21.4M), UTC clock, DAO health score, wallet display | ✅ Live |
-| **Sidebar Navigation** | Collapsible module sidebar with active state, smooth CSS transitions | ✅ Live |
-| **Exit Button** | Persistent ← Exit to Site link on all /app/* routes | ✅ Live |
-| **Marketing Site** | 9-section landing page with MetaMask design system, Framer Motion scroll animations, count-up stats | ✅ Live |
-| **Realtime Events** | Supabase realtime subscriptions on events, threats, votes, treasury_transfers tables | 🚧 Beta |
-| **Live Blockchain Feed** | Alchemy SDK → Ethereum mainnet live data (mock-fallback while keys not configured) | 🚧 Beta |
-| **Wallet Connect** | WalletConnect v2 + ENS resolution for personalized contributor profile | 🔮 Planned |
-| **DAO Switcher** | Multi-DAO support beyond Uniswap (Compound, Aave, MakerDAO, ENS) | 🔮 Planned |
+| Feature | Description |
+|---|---|
+| **3D Universe Canvas** | Real-time Three.js neural network with Earth core, 6 satellite module nodes, orbital connection lines, and traveling particles |
+| **Governance Arena** | Live proposal list, FOR/AGAINST/ABSTAIN vote bars, whale voter tracking, quorum progress indicator, AI-generated proposal summaries |
+| **Treasury Reactor** | Multi-token balance display for the $2.3B Uniswap treasury, 24h and 7d flow tracking, runway calculator, health score, anomaly flags |
+| **Contributor Galaxy** | Contributor profiles with reputation scores, XP levels, contributor classes (Architect, Diplomat, Sentinel, Merchant, Explorer), and activity charts |
+| **Security Sentinel** | Active threat list with severity badges, threat type classification (Sybil, flash loan, treasury drain, contract exploit), and evidence viewer |
+| **Multiverse Simulator** | 7 scenario types, 3 branching timelines per run, probability scores, treasury impact projections, and survival runway in months |
+| **AI Agent Terminal** | HERMES, ATLAS, AEGIS, and NEXUS agents powered by Gemini 2.0 Flash with streaming responses and agent-selector chips |
+| **Live Event Ticker** | Scrolling marquee of real-time DAO events in the status bar |
+| **Loading Screen** | Animated system initialization sequence with per-module boot messages |
+| **Status Bar** | Live Ethereum block number, UTC clock, DAO health score, and wallet address display |
+| **Sidebar Navigation** | Collapsible module sidebar with active state highlighting and smooth transitions |
+| **Marketing Site** | 9-section landing page with MetaMask design system, Framer Motion scroll animations, and count-up stats |
 
 ---
 
@@ -79,41 +75,41 @@ Axion gives DAO operators, delegates, and community members a single command cen
 
 ```mermaid
 graph TB
-    subgraph "Frontend Layer"
-        A[Marketing Site /] --> B[App Interface /app]
-        B --> C[3D Universe Canvas]
-        B --> D[Module Pages]
-        B --> E[AI Command Bar]
+    subgraph Frontend["Frontend Layer"]
+        A["Marketing Site"] --> B["App Interface"]
+        B --> C["3D Universe Canvas"]
+        B --> D["Module Pages"]
+        B --> E["AI Command Bar"]
     end
 
-    subgraph "API Layer - Next.js Routes"
-        F[/api/blockchain/proposals]
-        G[/api/blockchain/treasury]
-        H[/api/blockchain/contributors]
-        I[/api/blockchain/events]
-        J[/api/security]
-        K[/api/simulate]
-        L[/api/ai]
+    subgraph APILayer["API Layer"]
+        F["proposals"]
+        G["treasury"]
+        H["contributors"]
+        I["events"]
+        J["security"]
+        K["simulate"]
+        L["ai"]
     end
 
-    subgraph "Data Sources"
-        M[Alchemy SDK - Ethereum Mainnet]
-        N[Uniswap Governor 0x408ED6]
-        O[UNI Token 0x1f9840]
-        P[Treasury Multisig 0x1a9C81]
+    subgraph DataSources["Data Sources"]
+        M["Alchemy SDK"]
+        N["Governor Contract"]
+        O["UNI Token Contract"]
+        P["Treasury Multisig"]
     end
 
-    subgraph "AI Layer"
-        Q[Google Gemini Flash 2.0]
-        R[HERMES - Governance Agent]
-        S[ATLAS - Treasury Agent]
-        T[AEGIS - Security Agent]
-        U[NEXUS - Operations Agent]
+    subgraph AILayer["AI Layer"]
+        Q["Gemini Flash 2.0"]
+        R["Hermes - Governance"]
+        S["Atlas - Treasury"]
+        T["Aegis - Security"]
+        U["Nexus - Operations"]
     end
 
-    subgraph "Database"
-        V[Supabase PostgreSQL]
-        W[Realtime Subscriptions]
+    subgraph Database["Database"]
+        V["Supabase PostgreSQL"]
+        W["Realtime Subscriptions"]
     end
 
     D --> F & G & H & I & J & K
@@ -133,9 +129,9 @@ graph TB
 
 **Blockchain Integration Layer** — The Alchemy SDK is configured for Ethereum mainnet, targeting three core Uniswap contracts. The Governor Bravo contract (`0x408ED6354d4973f66138C91495F2f2FCbd8724C3`) is the source for all governance data. The UNI token contract (`0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984`) provides voting power and delegation data. The Treasury multisig (`0x1a9C8182C09F50C8318d769245beA52c32BE35BC`) holds $2.3B in UNI, USDC, and ETH.
 
-**AI Agent Layer** — A single Edge Runtime route (`/api/ai`) dispatches to one of five Gemini system prompts based on the `agent` key in the request body. Each agent is a domain expert with a specialized system instruction. Responses are streamed token-by-token via `ReadableStream` → `getReader()` → incremental `setMessages` updates in the UI. A graceful demo-mode fallback fires when `GOOGLE_GENERATIVE_AI_API_KEY` is absent.
+**AI Agent Layer** — A single Edge Runtime route (`/api/ai`) dispatches to one of five Gemini system prompts based on the `agent` key in the request body. Each agent is a domain expert with a specialized system instruction. Responses are streamed token-by-token via `ReadableStream` and decoded incrementally in the UI. A graceful demo-mode fallback fires when `GOOGLE_GENERATIVE_AI_API_KEY` is absent.
 
-**Database & Real-time Layer** — Supabase PostgreSQL stores 7 tables: `proposals`, `votes`, `contributors`, `treasury_snapshots`, `treasury_transfers`, `threats`, and `events`. Realtime publication is enabled on four high-frequency tables (`events`, `threats`, `votes`, `treasury_transfers`) for live UI updates. Full-text and composite indexes are defined on all hot query paths.
+**Database and Real-time Layer** — Supabase PostgreSQL stores 7 tables: `proposals`, `votes`, `contributors`, `treasury_snapshots`, `treasury_transfers`, `threats`, and `events`. Realtime publication is enabled on four high-frequency tables (`events`, `threats`, `votes`, `treasury_transfers`) for live UI updates. Composite indexes are defined on all hot query paths.
 
 ---
 
@@ -143,36 +139,34 @@ graph TB
 
 ```mermaid
 graph LR
-    subgraph "User Query"
-        A[User Input + Agent Context]
+    Input["User Query and Agent Context"]
+
+    subgraph Router["API Route - ai"]
+        B{"Agent Router"}
+        B -->|governance| C["Hermes Agent"]
+        B -->|treasury| D["Atlas Agent"]
+        B -->|security| E["Aegis Agent"]
+        B -->|operations| F["Nexus Agent"]
+        B -->|general| G["General Agent"]
     end
 
-    subgraph "POST /api/ai - Edge Runtime"
-        B{Agent Router}
-        B -->|governance| C[HERMES Agent]
-        B -->|treasury| D[ATLAS Agent]
-        B -->|security| E[AEGIS Agent]
-        B -->|operations| F[NEXUS Agent]
-        B -->|general| G[General Agent]
+    subgraph Gemini["Google Gemini Flash 2.0"]
+        H["Domain Expert System Prompt"]
+        I["Streaming Response"]
     end
 
-    subgraph "Gemini Flash 2.0"
-        H[Domain Expert System Prompt]
-        I[generateContentStream]
-    end
-
+    Input --> B
     C & D & E & F & G --> H
     H --> I
-    I --> J[ReadableStream - text/plain]
-    J --> K[Token-by-token UI update]
+    I --> J["Real-time Token Stream to UI"]
 ```
 
 | Agent | Code Name | Domain | Specialization | Example Queries |
 |---|---|---|---|---|
 | HERMES | `governance` | Governance | On-chain proposals, voting patterns, quorum risk, delegate alignment, whale tracking | "Who are the whale voters on Prop #127?", "What's the quorum risk this week?" |
-| ATLAS | `treasury` | Treasury | Multi-token balances, token flow analysis, runway projections, DeFi position monitoring, outflow anomalies | "Is our runway healthy?", "Show me anomalous outflows in the last 24h" |
-| AEGIS | `security` | Security | Sybil cluster analysis, governance attack simulation, flash loan risk scoring, wallet behavior patterns, threat triage | "Any sybil activity today?", "Alert me on flash loan governance risk" |
-| NEXUS | `operations` | Operations | Contributor reputation scoring, collaboration network analysis, scenario forecasting, Monte Carlo timeline modeling | "Model a 40% market crash", "Simulate a governance takeover scenario" |
+| ATLAS | `treasury` | Treasury | Multi-token balances, token flow analysis, runway projections, outflow anomaly detection | "Is our runway healthy?", "Show me anomalous outflows in the last 24h" |
+| AEGIS | `security` | Security | Sybil cluster analysis, governance attack simulation, flash loan risk scoring, wallet behavior patterns | "Any sybil activity today?", "Alert me on flash loan governance risk" |
+| NEXUS | `operations` | Operations | Contributor reputation scoring, collaboration network analysis, scenario forecasting | "Model a 40% market crash", "Simulate a governance takeover scenario" |
 
 ---
 
@@ -181,29 +175,29 @@ graph LR
 ```mermaid
 sequenceDiagram
     participant User
-    participant NextJS as Next.js Frontend
+    participant UI as Next.js Frontend
     participant API as API Routes
     participant Alchemy as Alchemy SDK
-    participant Ethereum as Ethereum Mainnet
-    participant Supabase as Supabase DB
-    participant Gemini as Gemini AI
+    participant Chain as Ethereum Mainnet
+    participant DB as Supabase
+    participant AI as Gemini AI
 
-    User->>NextJS: Opens /app (Universe)
-    NextJS->>API: GET /api/blockchain/proposals
-    API->>Alchemy: queryFilter(GovernorContract, ProposalCreated)
-    Alchemy->>Ethereum: eth_getLogs
-    Ethereum-->>Alchemy: Raw log data
-    Alchemy-->>API: Decoded proposal events
-    API->>Supabase: Cache + store proposals
-    API-->>NextJS: Proposal[] JSON
-    NextJS-->>User: 3D nodes render for each proposal
+    User->>UI: Opens Universe page
+    UI->>API: GET proposals
+    API->>Alchemy: queryFilter GovernorContract
+    Alchemy->>Chain: eth_getLogs
+    Chain-->>Alchemy: Raw log data
+    Alchemy-->>API: Decoded events
+    API->>DB: Cache proposals
+    API-->>UI: Proposal array JSON
+    UI-->>User: 3D nodes render
 
-    User->>NextJS: Asks AI "Is the treasury healthy?"
-    NextJS->>API: POST /api/ai {message, agent: "treasury"}
-    API->>Gemini: ATLAS system prompt + user message
-    Gemini-->>API: Streaming tokens via generateContentStream
-    API-->>NextJS: ReadableStream text/plain
-    NextJS-->>User: Real-time streaming response
+    User->>UI: Asks AI about treasury
+    UI->>API: POST ai with atlas agent
+    API->>AI: Atlas system prompt and message
+    AI-->>API: Streaming tokens
+    API-->>UI: ReadableStream
+    UI-->>User: Real-time response
 ```
 
 ---
@@ -212,22 +206,21 @@ sequenceDiagram
 
 ```mermaid
 graph TD
-    A[User lands on axion-dao.vercel.app] --> B[Marketing Home Page]
-    B --> C{User Action}
-    C -->|Clicks Launch App| D[Loading Screen: Initializing Systems]
-    C -->|Browses Marketing| E[/governance /treasury /security pages]
+    A["User visits axion-dao.vercel.app"] --> B["Marketing Home Page"]
+    B --> C{"User Action"}
+    C -->|"Launch App"| D["Loading Screen"]
+    C -->|"Browse"| E["Module Marketing Pages"]
     E --> D
-    D --> F[/app -- 3D Universe Loads]
-    F --> G[Universe Module -- Neural Network Overview]
-    G --> H{Navigate Sidebar}
-    H -->|Governance| I[Proposal List + Vote Bars + Whale Tracking]
-    H -->|Treasury| J[Token Balances + Flow Visualization + Health Score]
-    H -->|Contributors| K[Contributor List + Reputation Scores + XP Levels]
-    H -->|Security| L[Threat List + Severity Badges + Evidence Viewer]
-    H -->|Simulator| M[Scenario Builder + 3 Timeline Branches]
-    I & J & K & L & M --> N[AI Agent Terminal]
-    N --> O[Select Agent: HERMES / ATLAS / AEGIS / NEXUS]
-    O --> P[Streaming AI Response via Gemini Flash]
+    D --> F["Universe - 3D Neural Network"]
+    F --> G{"Navigate Sidebar"}
+    G -->|"Governance"| H["Proposals and Voting"]
+    G -->|"Treasury"| I["Balances and Flows"]
+    G -->|"Contributors"| J["Reputation and Galaxy"]
+    G -->|"Security"| K["Threats and Alerts"]
+    G -->|"Simulator"| L["Scenario Branches"]
+    H & I & J & K & L --> M["AI Command Bar"]
+    M --> N["Select Agent"]
+    N --> O["Streaming AI Response"]
 ```
 
 ---
@@ -247,12 +240,12 @@ graph TD
 | **Blockchain** | Alchemy SDK | 3.4.1 | Ethereum mainnet data, event log queries |
 | **Blockchain** | Ethers.js | 6.13.4 | Contract ABI decoding, ENS resolution |
 | **AI** | @google/generative-ai | 0.24.1 | Gemini 2.0 Flash, streaming content generation |
-| **Database** | Supabase | 2.46.1 | PostgreSQL + realtime subscriptions |
+| **Database** | Supabase | 2.46.1 | PostgreSQL and realtime subscriptions |
 | **Charts** | Recharts | 2.13.3 | Treasury and governance data visualization |
 | **Data Viz** | D3 | 7.9.0 | Custom network graph layouts |
 | **Icons** | Lucide React | 0.577.0 | UI icon set |
 | **Styling** | Tailwind CSS | 3.4.14 | Utility classes |
-| **Styling** | CSS Custom Properties | — | MetaMask design token system (`--mm-color-*`, `--gov`, `--treasury`) |
+| **Styling** | CSS Custom Properties | — | MetaMask design token system |
 | **Date Utils** | date-fns | 4.1.0 | Timestamp formatting |
 | **Deployment** | Vercel | — | Edge runtime, CDN, automatic HTTPS |
 
@@ -264,8 +257,8 @@ graph TD
 dao-cosmos-os/
 ├── src/
 │   ├── app/
-│   │   ├── page.tsx                    # Marketing home — 9-section landing page
-│   │   ├── layout.tsx                  # Root layout with MarketingNav + footer
+│   │   ├── page.tsx                    # Marketing home - 9-section landing page
+│   │   ├── layout.tsx                  # Root layout with MarketingNav
 │   │   ├── globals.css                 # MetaMask design system, mm-btn, display-hero
 │   │   ├── providers.tsx               # Zustand store hydration, Supabase client
 │   │   ├── ai-agents/page.tsx          # AI Agents marketing page with live terminal
@@ -275,39 +268,28 @@ dao-cosmos-os/
 │   │   ├── platform/page.tsx           # Platform overview
 │   │   ├── universe/page.tsx           # Universe marketing page
 │   │   ├── docs/page.tsx               # Documentation page
-│   │   ├── app/                        # --- App OS Zone ---
-│   │   │   ├── layout.tsx              # App shell: 3D canvas + sidebar + status bar + exit btn
-│   │   │   ├── page.tsx                # Universe module — module quick-access grid
+│   │   ├── app/                        # App OS Zone
+│   │   │   ├── layout.tsx              # App shell: 3D canvas, sidebar, status bar
+│   │   │   ├── page.tsx                # Universe module - module quick-access grid
 │   │   │   ├── governance/page.tsx     # Governance Arena: proposals, votes, KPIs
 │   │   │   ├── treasury/page.tsx       # Treasury Reactor: balances, flows, health
 │   │   │   ├── contributors/page.tsx   # Contributor Galaxy: profiles, XP, leaderboard
 │   │   │   ├── security/page.tsx       # Security Sentinel: threats, scores, evidence
 │   │   │   └── simulator/page.tsx      # Multiverse Simulator: scenarios, timelines
 │   │   └── api/
-│   │       ├── ai/route.ts             # POST — Gemini 2.0 Flash streaming, 5-agent dispatch
+│   │       ├── ai/route.ts             # POST - Gemini 2.0 Flash streaming, 5-agent dispatch
 │   │       ├── blockchain/
-│   │       │   ├── proposals/route.ts  # GET — Uniswap Governor proposals
-│   │       │   ├── treasury/route.ts   # GET — Treasury balances + transfers
-│   │       │   ├── contributors/route.ts # GET — Contributor reputation + XP
-│   │       │   └── events/route.ts     # GET — Live DAO event stream
-│   │       ├── security/route.ts       # GET — Active threats + wallet scores
-│   │       └── simulate/route.ts       # POST — Scenario simulation (3 timelines)
+│   │       │   ├── proposals/route.ts  # GET - Uniswap Governor proposals
+│   │       │   ├── treasury/route.ts   # GET - Treasury balances and transfers
+│   │       │   ├── contributors/route.ts # GET - Contributor reputation and XP
+│   │       │   └── events/route.ts     # GET - Live DAO event stream
+│   │       ├── security/route.ts       # GET - Active threats and wallet scores
+│   │       └── simulate/route.ts       # POST - Scenario simulation (3 timelines)
 │   ├── components/
 │   │   ├── canvas/
 │   │   │   ├── UniverseCanvas.tsx      # Dynamic import wrapper (SSR disabled)
 │   │   │   ├── UniverseScene.tsx       # Full Three.js scene: globe, nodes, particles
-│   │   │   ├── NodeSphere.tsx          # Individual module node component
-│   │   │   ├── Connection.tsx          # Connection line renderer
-│   │   │   ├── EnergyStream.tsx        # Particle stream between nodes
-│   │   │   ├── StarField.tsx           # Background star field
-│   │   │   ├── ReactorCore.tsx         # Animated treasury core
-│   │   │   ├── NeuralNetwork.tsx       # Network topology renderer
-│   │   │   ├── CameraController.tsx    # Smooth camera transitions
-│   │   │   ├── PostProcessing.tsx      # Bloom + depth-of-field effects
-│   │   │   ├── ContributorStar.tsx     # Individual contributor star
-│   │   │   ├── ThreatNode.tsx          # Security threat node
-│   │   │   ├── TimelineFork.tsx        # Simulator timeline branch
-│   │   │   └── Shockwave.tsx           # Event visual effect
+│   │   │   └── ...                     # NodeSphere, EnergyStream, StarField, etc.
 │   │   ├── ui/
 │   │   │   ├── StatusBar.tsx           # Fixed top bar: block, clock, health, wallet
 │   │   │   ├── Sidebar.tsx             # Collapsible module navigation
@@ -317,18 +299,13 @@ dao-cosmos-os/
 │   ├── hooks/
 │   │   ├── useAIChat.ts                # Streaming AI chat with agent context
 │   │   ├── useApiData.ts               # Generic data fetcher with loading/error state
-│   │   ├── useCountUp.ts               # Animated number count-up on mount
-│   │   └── useStreamingResponse.ts     # Lower-level streaming reader hook
+│   │   └── useCountUp.ts               # Animated number count-up on mount
 │   ├── services/
 │   │   ├── alchemy.ts                  # Alchemy SDK client, contract event queries
-│   │   ├── contracts.ts                # Governor + Token ABI definitions
+│   │   ├── contracts.ts                # Governor and Token ABI definitions
 │   │   ├── security.ts                 # Threat heuristics, wallet risk scoring
 │   │   ├── simulator.ts                # Monte Carlo scenario simulation engine
-│   │   ├── supabase.ts                 # Supabase client, CRUD + realtime helpers
-│   │   ├── blockchain.ts               # Ethers.js provider, block utilities
-│   │   ├── analytics.ts                # Health score calculation, metrics aggregation
-│   │   ├── ai.ts                       # AI service helpers
-│   │   └── eventBus.ts                 # Internal event pub/sub system
+│   │   └── supabase.ts                 # Supabase client, CRUD and realtime helpers
 │   ├── store/
 │   │   ├── daoStore.ts                 # DAO data: proposals, treasury, contributors
 │   │   ├── agentStore.ts               # AI agent messages, streaming state
@@ -339,10 +316,7 @@ dao-cosmos-os/
 │       ├── constants.ts                # DAO config (Governor address, quorum, modules)
 │       ├── mockData.ts                 # Realistic Uniswap mock data for demo/fallback
 │       ├── api.ts                      # Centralized API client (fetch wrappers)
-│       ├── formatters.ts               # formatCurrency, formatNumber, formatPercent
-│       ├── colors.ts                   # Module color tokens
-│       ├── eventTypes.ts               # Event type constants
-│       └── animations.ts               # Framer Motion variant presets
+│       └── formatters.ts               # formatCurrency, formatNumber, formatPercent
 ├── supabase/
 │   └── migrations/
 │       └── 001_initial.sql             # Full DB schema: 7 tables, realtime setup
@@ -350,8 +324,7 @@ dao-cosmos-os/
 │   └── fonts/                          # Orbitron, Rajdhani, JetBrains Mono
 ├── next.config.js                      # Security headers, GLSL loader, Three.js SSR fix
 ├── .env.example                        # Environment variable template
-├── vercel.json                         # Vercel deployment config
-└── package.json                        # Dependencies + scripts
+└── package.json                        # Dependencies and scripts
 ```
 
 ---
@@ -367,8 +340,8 @@ dao-cosmos-os/
 ### Step 1 — Clone the repository
 
 ```bash
-git clone https://github.com/advikdivekar/axion-innovat3-h.git
-cd axion-innovat3-h
+git clone https://github.com/advikdivekar/axion-innovat3-hackathon.git
+cd axion-innovat3-hackathon
 ```
 
 ### Step 2 — Install dependencies
@@ -386,17 +359,14 @@ cp .env.example .env.local
 Open `.env.local` and fill in your keys:
 
 ```env
-# Blockchain Data (Required for live data — mock data used without this)
-# Get a free key at: https://alchemy.com
+# Blockchain Data (mock data used without this)
 ALCHEMY_API_KEY=your_alchemy_api_key_here
 ALCHEMY_NETWORK=eth-mainnet
 
-# AI Agents (Required for live AI responses — demo mode without this)
-# Get a free key at: https://aistudio.google.com
+# AI Agents (demo mode without this)
 GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_api_key_here
 
-# Database (Required for data persistence and realtime — optional for demo)
-# Get a free project at: https://supabase.com
+# Database (optional for demo)
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key_here
@@ -406,7 +376,7 @@ NEXT_PUBLIC_TARGET_DAO=uniswap
 NEXT_PUBLIC_APP_URL=http://localhost:3001
 ```
 
-> **Note:** The app runs fully without any API keys using realistic mock Uniswap data. All 21 pages build and render. Add keys to enable live blockchain data, real AI responses, and data persistence.
+> **Note:** The app runs fully without any API keys using realistic mock Uniswap data. All 21 pages build and render.
 
 ### Step 4 — Run the development server
 
@@ -419,44 +389,21 @@ Open [http://localhost:3001](http://localhost:3001)
 ### Step 5 — Verify the API endpoints
 
 ```bash
-# Governance proposals (Uniswap Governor)
 curl http://localhost:3001/api/blockchain/proposals
-
-# Treasury ($2.3B Uniswap DAO)
 curl http://localhost:3001/api/blockchain/treasury
-
-# Contributors (reputation + XP scores)
 curl http://localhost:3001/api/blockchain/contributors
-
-# Security threats (active + investigating)
 curl http://localhost:3001/api/security
 
-# Live events stream
-curl http://localhost:3001/api/blockchain/events
-
-# Run a simulation
 curl -X POST http://localhost:3001/api/simulate \
   -H "Content-Type: application/json" \
   -d '{"scenarioType":"market_crash","severity":0.7}'
 ```
 
-Each should return typed JSON matching the interfaces in `src/lib/types.ts`.
-
 ---
 
 ## Deploying to Vercel
 
-### Step 1 — Push to GitHub
-
-```bash
-git add .
-git commit -m "feat: complete Axion DAO Cosmos OS"
-git push origin main
-```
-
-### Step 2 — Deploy to Vercel
-
-**Option A — Vercel CLI (recommended):**
+### Option A — Vercel CLI
 
 ```bash
 npm install -g vercel
@@ -464,33 +411,25 @@ vercel login
 vercel --prod
 ```
 
-**Option B — Vercel Dashboard:**
+### Option B — Vercel Dashboard
 
 1. Go to [vercel.com](https://vercel.com) → New Project
 2. Import your GitHub repository
 3. Framework: **Next.js** (auto-detected)
 4. Click **Deploy**
 
-### Step 3 — Add Environment Variables
+### Environment Variables
 
-In Vercel Dashboard → Project → Settings → Environment Variables, add all variables from `.env.local`.
+Add these in Vercel Dashboard under Project → Settings → Environment Variables:
 
-Or via CLI:
-
-```bash
-vercel env add ALCHEMY_API_KEY production
-vercel env add GOOGLE_GENERATIVE_AI_API_KEY production
-vercel env add NEXT_PUBLIC_SUPABASE_URL production
-vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY production
-vercel env add SUPABASE_SERVICE_ROLE_KEY production
-vercel env add NEXT_PUBLIC_TARGET_DAO production
-vercel env add NEXT_PUBLIC_APP_URL production
 ```
-
-### Step 4 — Redeploy with environment variables
-
-```bash
-vercel --prod
+ALCHEMY_API_KEY
+GOOGLE_GENERATIVE_AI_API_KEY
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+SUPABASE_SERVICE_ROLE_KEY
+NEXT_PUBLIC_TARGET_DAO=uniswap
+NEXT_PUBLIC_APP_URL=https://axion-dao.vercel.app
 ```
 
 ---
@@ -500,10 +439,6 @@ vercel --prod
 All routes return `application/json`. The AI route returns `text/plain; charset=utf-8` as a streaming response.
 
 ### `GET /api/blockchain/proposals`
-
-Returns the current list of Uniswap governance proposals.
-
-**Response:** `Proposal[]`
 
 ```json
 [
@@ -516,7 +451,6 @@ Returns the current list of Uniswap governance proposals.
     "quorum": 40000000,
     "quorumReached": false,
     "impactScore": 85,
-    "aiSummary": "Activates the fee switch to divert 20% of LP fees...",
     "topVoters": [{ "voterENS": "a16z.eth", "weight": 2100000, "isWhale": true }]
   }
 ]
@@ -524,80 +458,44 @@ Returns the current list of Uniswap governance proposals.
 
 ### `GET /api/blockchain/treasury`
 
-Returns the current Uniswap treasury state.
-
-**Response:** `TreasuryState`
-
 ```json
 {
   "totalValueUSD": 2341567890,
   "tokens": [
-    { "symbol": "UNI", "balance": 300000000, "valueUSD": 1800000000, "percentage": 76.8 },
-    { "symbol": "USDC", "balance": 340000000, "valueUSD": 340000000, "percentage": 14.5 },
-    { "symbol": "ETH", "balance": 60000, "valueUSD": 180000000, "percentage": 7.7 }
+    { "symbol": "UNI", "valueUSD": 1800000000, "percentage": 76.8 },
+    { "symbol": "USDC", "valueUSD": 340000000, "percentage": 14.5 },
+    { "symbol": "ETH", "valueUSD": 180000000, "percentage": 7.7 }
   ],
   "runwayDays": 1533,
   "healthScore": 87,
-  "riskLevel": "normal",
-  "inflow24h": 12400000,
-  "outflow24h": 8700000
+  "riskLevel": "normal"
 }
 ```
 
 ### `GET /api/blockchain/contributors`
 
-Returns the contributor registry with reputation scores and XP.
-
-**Response:** `Contributor[]`
-
 ```json
 [
   {
-    "address": "0x...",
     "ensName": "vitalik.eth",
     "votingPower": 2800000,
     "reputationScore": 94,
     "contributorClass": "architect",
     "xp": 48200,
-    "level": 34,
-    "participationRate": 0.91
-  }
-]
-```
-
-### `GET /api/blockchain/events`
-
-Returns the live DAO event stream.
-
-**Response:** `DAOEvent[]`
-
-```json
-[
-  {
-    "id": "e1",
-    "type": "vote_cast",
-    "title": "Vote on Proposal #127",
-    "data": { "voter": "a16z.eth", "power": 2100000 },
-    "magnitude": 1.0
+    "level": 34
   }
 ]
 ```
 
 ### `GET /api/security`
 
-Returns active and investigating threat alerts.
-
-**Response:** `Threat[]`
-
 ```json
 [
   {
-    "id": "th1",
     "type": "sybil",
     "severity": "critical",
     "riskScore": 87,
     "title": "Sybil Attack Detected",
-    "description": "Cluster of 47 wallets with identical voting patterns.",
     "status": "active",
     "detectedBy": "ai"
   }
@@ -606,31 +504,15 @@ Returns active and investigating threat alerts.
 
 ### `POST /api/simulate`
 
-Runs a governance scenario and returns 3 branching timelines.
-
-**Request:**
-```json
-{
-  "scenarioType": "market_crash",
-  "severity": 0.7
-}
-```
+**Request:** `{ "scenarioType": "market_crash", "severity": 0.7 }`
 
 **Scenario types:** `market_crash` · `governance_takeover` · `treasury_depletion` · `whale_influence` · `contributor_exodus` · `protocol_exploit` · `custom`
 
-**Response:** `SimulationResult` with 3 `SimulationTimeline` objects (Resilient / Stagnant / Collapse), each with probability, treasury impact %, contributor change %, and survival runway in months.
+Returns 3 `SimulationTimeline` objects (Resilient / Stagnant / Collapse) with probability, treasury impact %, and survival runway in months.
 
 ### `POST /api/ai`
 
-Streams a domain-expert response from the selected Gemini agent.
-
-**Request:**
-```json
-{
-  "message": "Is our treasury runway healthy?",
-  "agent": "treasury"
-}
-```
+**Request:** `{ "message": "Is our treasury healthy?", "agent": "treasury" }`
 
 **Agent values:** `governance` (HERMES) · `treasury` (ATLAS) · `security` (AEGIS) · `operations` (NEXUS) · `general`
 
@@ -642,18 +524,10 @@ Streams a domain-expert response from the selected Gemini agent.
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feat/your-feature`
-3. Commit your changes: `git commit -m "feat: describe your change"`
-4. Push to the branch: `git push origin feat/your-feature`
-5. Open a Pull Request against `dev`
+3. Commit: `git commit -m "feat: describe your change"`
+4. Push and open a Pull Request against `dev`
 
 **Branch convention:** `main` → production · `dev` → integration · `Dev-A` / `Dev-B` → feature branches
-
-**Protected files** (do not modify without discussion):
-- `src/services/**` — blockchain + AI service layer
-- `src/store/daoStore.ts`, `agentStore.ts`, `eventStore.ts`
-- `src/app/providers.tsx`
-- `supabase/migrations/**`
-- `src/lib/types.ts`, `constants.ts`, `mockData.ts`
 
 ---
 
@@ -669,7 +543,4 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 > *Every DAO deserves a Bloomberg Terminal — real-time, intelligent, beautiful. Axion is that terminal.*
 
-**Author:** Advik Divekar
-**Hackathon:** INNOVAT3
-**Stack:** Next.js · Three.js · Gemini AI · Alchemy · Supabase · Ethereum
-**Target DAO:** Uniswap (Governor Bravo · 40M UNI quorum · $2.3B treasury)
+**Author:** Advik Divekar · **Hackathon:** INNOVAT3 · **Target DAO:** Uniswap (Governor Bravo · 40M UNI quorum · $2.3B treasury)
