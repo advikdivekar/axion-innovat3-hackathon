@@ -1,20 +1,9 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   AXION — GLOBAL STYLES
-   MetaMask × ChainGPT Design System
-   1rem = 10px (MetaMask scale)
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-/* ─── 1. FONT IMPORTS ──────────────────────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
-
-/* ─── 2. TAILWIND DIRECTIVES ───────────────────────────────────────────────── */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ─── 3. CSS CUSTOM PROPERTIES ─────────────────────────────────────────────── */
 :root {
-  /* ── MetaMask exact design tokens ── */
   --mm-color-primary: #f6851b;
   --mm-color-primary-hover: #e2761b;
   --mm-color-background-default: #ffffff;
