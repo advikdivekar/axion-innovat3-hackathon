@@ -53,6 +53,11 @@ next-env.d.ts
 *.pdf
 .agent/
 
+# hardhat / solidity
+artifacts/
+cache/
+typechain-types/
+
 # Internal planning docs — README.md is the only .md tracked
 AXION_REVAMP_MASTER.md
 docs/
